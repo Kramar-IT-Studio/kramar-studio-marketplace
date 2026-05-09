@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "product",
+  "version": "0.1.0",
+  "description": "Product management toolkit for Claude Code. Per-feature cycle Discover → Define → Spec → Validate, plus rare market-scan (quarterly anchor) and prioritize (backlog operation). Artifacts (HYP/PRD/SPEC/VAL/SCAN) are versioned and cross-link to ADRs from archforge. Two skills: product-conventions (artifact rules), product-cycle (methodology). Soft hooks enforce prerequisites and size budgets.",
+  "keywords": [
+    "product-management",
+    "prd",
+    "discovery",
+    "market-scan",
+    "compound-engineering",
+    "kramar-studio"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/kramar-it-studio/kramar-studio-marketplace",
+  "repository": "https://github.com/kramar-it-studio/kramar-studio-marketplace"
+}

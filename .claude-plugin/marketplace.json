@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "kramar-studio-marketplace",
+  "version": "0.1.0",
+  "description": "Marketplace hosting Kramar IT Studio role plugins (product, ops, security). Companion to archforge-marketplace; same methodology, different roles.",
+  "owner": {
+    "name": "Kramar IT Studio"
+  },
+  "plugins": [
+    {
+      "name": "product",
+      "source": "./plugins/product",
+      "description": "Product management toolkit: market-scan (rare) + per-feature cycle Discover → Define → Spec → Validate, with prioritize over backlog. Artifacts (HYP/PRD/SPEC/VAL/SCAN) cross-link to ADRs from archforge.",
+      "category": "development",
+      "keywords": [
+        "product-management",
+        "prd",
+        "discovery",
+        "market-scan",
+        "compound-engineering",
+        "kramar-studio"
+      ]
+    }
+  ]
+}
