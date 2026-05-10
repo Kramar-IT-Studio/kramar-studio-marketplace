@@ -130,6 +130,86 @@ Most non-trivial features touch architecture. The cycles are different but they 
 
 If the request is a bug fix, a copy change, or a minor UX tweak that doesn't carry a hypothesis — don't force the cycle. Say so plainly: "this isn't product cycle territory, it's a tweak." Mark it in the changelog or commit and move on. The cycle is for **decisions**, not for keystrokes.
 
+## Worked example: one full pass
+
+A connected example showing how the artifacts interlock. Same case as the per-command examples in `discover.md` / `define.md` / `spec.md` / `validate.md`, but here as a *narrative* — the call each phase made and what would have broken if the cycle had been short-circuited.
+
+### Setting
+
+Solo studio, B2B docs product. Support tag `restore document` is climbing — 47 tickets in 30 days, ~80% from accounts <90 days old. The trigger to start a cycle is the support data, not a feature request.
+
+### Phase 0: market-scan (already on file)
+
+The `onboarding-and-recovery` area has a fresh scan from the last quarter (`SCAN-0002`). Key finding from the scan: the gap is not "missing undo" — every comparable product has *some* form of recovery. The gap is **time-to-recovery without contacting support**. Notion: 10s toast. Linear: immediate-then-trash. Our product: trash-only, ~30 minutes of human work to restore.
+
+This anchors the discovery. Without `SCAN-0002`, the cycle would start without context for "5s vs 10s vs immediate" — just our guess.
+
+### Phase 1: discover → HYP-0007
+
+The discovery establishes:
+- The problem is *recovery latency*, not *information loss* — restored documents come back fine, it's just slow.
+- The cohort is paying users in their first 90 days.
+- The hypothesis is one sentence with a number: *"5-second undo toast → 60% reduction in restore tickets, weekly window."*
+- Open questions include the specific "5 vs 10 seconds" call.
+- The anti-hypothesis names what would refute the bet: *if support data shows redeletes by the same user, the deletes were intentional and undo is decoration*.
+
+**What would have broken without discovery.** Going straight to a PRD would have produced "let's add an undo button" with no hypothesis, no measurable signal, and no anti-hypothesis. We'd have shipped, looked at "tickets went down a bit", felt good, and missed the keyboard-undo blind spot that surfaced in the validation. Discovery is what makes the validation later mean something.
+
+### Phase 2: define → PRD-0005
+
+The define phase produces the PRD. The load-bearing call is the **success metric**:
+
+| | Value |
+|---|---|
+| Primary | Support tickets tagged `restore document` per week |
+| Baseline | 11 / week (computed from Linear export) |
+| Target | ≤4.4 / week (60% reduction) |
+| Window | 4 weeks post-launch |
+| Counter | WAU among the same cohort, must not drop >2% |
+
+The PRD also surfaces the **architectural dependency**: the soft-delete window. We can't safely promise undo if the backend GCs deletes immediately. This triggers a parallel `/archforge:cycle` → `ADR-0011` (10-second server-side soft-delete window). The PRD's `links_to` carries `[HYP-0007, SCAN-0002, ADR-0011]`.
+
+**What would have broken without define.** Skipping straight from HYP to SPEC would have left the success metric unstated. The team would have built the toast, eyeballed the ticket trend, and declared victory. With no baseline, no target, no counter-metric, the validation later would have nothing to compare against.
+
+The other failure mode — fake success metric ("improved user satisfaction") — is shown as the bad example in `define.md`. Same crash, slower.
+
+### Phase 3: spec → SPEC-0005
+
+The spec expands the PRD's product-level acceptance into testable criteria. Key calls:
+
+1. Each PRD acceptance item maps to ≥1 SPEC criterion. Trace shown in the self-review block.
+2. Edge cases get explicit behavior — network failure has its own acceptance criterion (#6), not buried in prose.
+3. **Analytics is part of the spec**: events `document.deleted` and `document.undeleted` with `time_to_undo_ms` are named. Without this, the success metric in the PRD is unmeasurable. The hook only checks acceptance count; the analytics-coverage check is methodology, lives here.
+4. Out-of-scope is explicit: bulk delete is its own PRD; mobile breakpoint is its own design pass.
+
+`acceptance_count` lands at 6 — past the floor of 3, comfortable for the scope.
+
+**What would have broken without spec.** The team builds, ships, and the success metric is the *support tag count* (already instrumented). But the question "is 5s the right window" can't be answered without `time_to_undo_ms` — and that event was named in the SPEC. Without the SPEC, we'd ship a feature with a measurable headline metric but no way to revisit the calibration.
+
+### Phase 4: validate → VAL-0004
+
+Four weeks after launch. The validation reads the data and lands a verdict on line 1:
+
+> **Confirmed.** Tickets dropped 71% (vs 60% target). WAU +1.4% (counter held). Hypothesis right on direction, magnitude, and segment.
+
+But the validation doesn't stop at "confirmed". The `time_to_undo_ms` distribution shows clustering at 1.2–2.8s — much faster than the 5s budget. And the residual tickets cluster on keyboard-shortcut users who didn't see the toast.
+
+**The durable learning** isn't "undo works". It's "**users who delete via keyboard expect to resolve via keyboard**". That generalizes — every reversible keyboard action should have a keyboard-reachable undo. This insight outlives the feature; it seeds the next bet (HYP for `Cmd+Z` undo binding).
+
+The validation also reinforces **ADR-0011** (the 10s soft-delete window): the 1.2–2.8s undo distribution sits inside the 10s GC budget with margin. The ADR's justification holds.
+
+**What would have broken without validate.** If we'd shipped and moved on, the keyboard-undo insight would have stayed buried. The next discovery would have started from the same priors as HYP-0007. The whole point of the cycle is the loop — without validate, the loop isn't closed and the studio's product memory doesn't compound.
+
+The other failure mode — *protecting the launch* by marking +0.5pp as "directionally correct" — is shown as the bad example in `validate.md`. That kills the loop just as effectively as skipping the phase.
+
+### What the example shows in aggregate
+
+- **Each phase pays the next.** Discovery's anti-hypothesis informed what to instrument; PRD's metric defined what the SPEC analytics had to cover; SPEC's `time_to_undo_ms` event made the validation's keyboard-undo insight visible. Skip one and the chain breaks downstream.
+- **Cross-role linkage is structural.** ADR-0011 wasn't decorative — without the 10s server-side window, the 5s client toast couldn't make a safe promise. The PRD surfaced the dependency; `archforge` produced the decision; SPEC and VAL referenced it.
+- **The verdict is the start of the next cycle, not the end.** Confirmed VAL → backlog re-shuffles (bulk-delete-undo gains confidence), new HYP spawned (keyboard-undo binding). The VAL is feedback into prioritize, not a closing ceremony.
+
+If a real cycle in your project doesn't produce this kind of trail, the cycle isn't doing the work. Look for which phase got skipped or gestured at, and put the missing artifact in.
+
 ## Tone
 
 - **Push back, don't acquiesce.** A weak hypothesis, a missing metric, a vague segment — these are the failures the cycle exists to catch. Soft pushback that folds wastes the cycle.

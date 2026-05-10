@@ -85,6 +85,92 @@ After validation:
 - **No fabricated data.** If the user can't produce numbers, say so and stop. An inconclusive validation is honest; a confirmed-by-vibe one is fraud.
 - **Push back if the user argues for "confirmed" against ambiguous data.** The whole point of having a success metric was so we could be honest now.
 
+## Worked examples
+
+### Good: VAL-confirmed for "undo on accidental delete" (continues SPEC-0005)
+
+```yaml
+---
+id: VAL-0004
+status: active
+created_at: 2026-05-18
+role: product
+verdict: confirmed
+links_to:
+  - PRD-0005
+  - HYP-0007
+  - ADR-0011
+---
+```
+
+**Verdict.** **Confirmed.** Support tickets tagged `restore document` for the cohort dropped from 11/week (baseline) to 3.2/week (–71%) over the 4-week window — past the 60% target. WAU for the same cohort moved +1.4% (counter-metric held). The hypothesis was right on direction, magnitude, and segment.
+
+**Metric snapshot.**
+
+| Metric | Baseline | Measured | Delta | Target |
+|---|---|---|---|---|
+| Primary: support tickets `restore document` per week | 11 | 3.2 | –71% | ≤4.4 (–60%) |
+| Counter: WAU among cohort (paying, <90 days) | 1,840 | 1,866 | +1.4% | ≥–2% |
+
+- **Sample size.** 1,866 WAU; 13 tickets logged across the 4 weeks among this cohort.
+- **Time window.** 2026-04-21 → 2026-05-18 (4 weeks post-launch).
+
+**What the data showed.** Distribution of `time_to_undo_ms` (from the analytics event in SPEC-0005#6) clustered at 1.2–2.8s — most users undo within 3 seconds, well inside the 5s window. Tickets that *did* land in the period were almost all from users on the keyboard-shortcut path who didn't see the toast (one segment-level surprise — see Implications).
+
+**What we got wrong / right about the hypothesis.** Got right: assumption that <90-day users are the affected cohort (older users either didn't have the problem or had built workarounds). Got partly wrong: assumed all delete paths were equivalent — keyboard-shortcut users have a meaningfully worse experience because their hands are already off the mouse when the toast appears.
+
+**What we learned about the user.** Users who delete via keyboard expect to *resolve via keyboard*. The toast was reachable only by mouse; that's why a residual ticket cluster remained. Durable: any reversible action triggered by keyboard should have a keyboard-reachable undo affordance.
+
+**Implications.**
+
+- **Product.** Stay (PRD → `accepted`, HYP → `accepted`). One follow-up: `Cmd+Z` should bind to the undo affordance for 5 seconds after the toast appears. Spawn a new HYP for that — it's a separate small bet.
+- **Backlog.** Re-prioritize: the `bulk-delete-undo` candidate that was deferred should re-enter the ICE list. We have stronger confidence now (the underlying mechanic works).
+- **Architecture.** ADR-0011 (10s server-side soft-delete window) is reinforced — the 1.2–2.8s undo distribution sits comfortably inside the 10s GC budget.
+
+**Why this is good.** Verdict is on line 1 with the magnitude and the cohort. Counter-metric is reported, not buried. The "what we learned" section produces a *durable* user insight (keyboard users expect keyboard undo) that survives this feature and seeds the next bet. ADR is reinforced explicitly.
+
+### Bad: VAL that protects the launch
+
+```yaml
+---
+id: VAL-0005
+status: active
+created_at: 2026-05-18
+role: product
+verdict: confirmed
+links_to:
+  - PRD-0006
+  - HYP-0008
+---
+```
+
+**Verdict.** **Confirmed.** Users seem happier with onboarding. Activation didn't move much numerically but qualitatively the team feels good about the launch. Directionally correct.
+
+**Metric snapshot.**
+
+| Metric | Baseline | Measured | Delta | Target |
+|---|---|---|---|---|
+| Primary: activation rate D7 | 28% | 28.5% | +0.5pp | +5pp |
+
+**Why this is bad — line by line.**
+
+- **"Confirmed" is fraud, given the data shown.** The target was +5pp (28% → 33%). The result is +0.5pp, well inside random noise for that sample size. This is a **refuted** verdict, possibly **inconclusive** if the sample is small. Marking it confirmed protects the launch and burns the whole feedback loop the cycle exists for.
+- **"Directionally correct"** is a phrase invented to make missed targets sound like progress. Either the metric crossed the target or it didn't. If +0.5pp is the new target, restate the target *before* the launch and own that you weren't aiming as high. Post-hoc target adjustment is the most expensive form of self-deception.
+- **"The team feels good about the launch"** is not data. It's a feeling. Validation reads data.
+- **No counter-metric reported.** The PRD had `success_metric: "Improved user satisfaction"` (which we already established was broken — see define.md examples). The VAL inherits the brokenness and doesn't fix it.
+- **No "what we learned about the user" section.** A confirmed-by-vibe verdict produces no learning. The next discovery starts from the same shaky priors.
+
+The push-back move: refuse the verdict. Tell the user: "this is **refuted** or at minimum **inconclusive**. Mark it honestly. The point of the metric was to allow being wrong — accept the wrong, capture the learning. The roll-back conversation is separate."
+
+## Anti-patterns to refuse
+
+- **Verdict in section 5, not section 2.** Burying the verdict behind metric tables and prose lets the reader infer it from numbers — and inference produces the most generous interpretation. Verdict goes first; data comes after to support it.
+- **Adjusting the target post-hoc.** Either the original target was unrealistic (a learning about *us*) or the launch missed (a learning about *the bet*). Both are findings. Re-writing the target to match the result destroys the learning on either axis.
+- **"Inconclusive" as the safety verdict.** Reaching for inconclusive whenever data is uncomfortable defeats the cycle. Inconclusive is valid only when sample size or window genuinely can't decide; if the sample is sufficient and the result is unfavorable, that's *refuted*, not inconclusive.
+- **No segment cuts when the metric is mixed.** A primary metric that moved at the population level but masks a cohort difference (worked for cohort A, hurt cohort B) is a finding. Reporting only the average obscures this and produces a wrong "stay" decision.
+- **Leaving status transitions undone.** A confirmed verdict that doesn't move PRD → `accepted` and HYP → `accepted` leaves the artifacts in `active` forever. `/product:status` will keep flagging them as in-flight. Apply the transitions; that's part of the validation, not housekeeping.
+- **No ADR cross-link when the architecture was justified by the hypothesis.** If ADR-NNNN was bet on this validation being confirmed (or refuted), the VAL must surface that — `links_to` + an "Implications for architecture" line. Silent VALs let stale ADR justifications rot.
+
 ## After validation
 
 Tell the user:
