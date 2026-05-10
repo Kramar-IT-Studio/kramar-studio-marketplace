@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# archforge — soft architectural reminder hook.
+# architect — soft architectural reminder hook.
 #
 # This script runs after Edit/Write/MultiEdit tool calls. It NEVER blocks —
 # exits 0 always. Its only job is to surface gentle reminders when changes
@@ -29,9 +29,9 @@ ADR_CHANGED=$(git diff --name-only HEAD 2>/dev/null | grep -c "docs/architecture
 
 if [ "${CHANGED_COUNT:-0}" -ge 10 ] && [ "${ADR_CHANGED:-0}" -eq 0 ]; then
   cat <<EOF >&2
-[archforge] Reminder: ${CHANGED_COUNT} files changed in this session and no ADR has been touched.
+[architect] Reminder: ${CHANGED_COUNT} files changed in this session and no ADR has been touched.
             If this represents an architectural decision (new module, pattern, dependency, structural shift),
-            consider running /archforge:adr to capture it. Implicit decisions become tomorrow's tech debt.
+            consider running /architect:adr to capture it. Implicit decisions become tomorrow's tech debt.
 EOF
 fi
 
@@ -47,9 +47,9 @@ done
 
 if [ -n "$MANIFEST_CHANGED" ]; then
   cat <<EOF >&2
-[archforge] Reminder: \`$MANIFEST_CHANGED\` was modified — possibly a new dependency.
+[architect] Reminder: \`$MANIFEST_CHANGED\` was modified — possibly a new dependency.
             New dependencies are architectural decisions. If this is non-trivial (a runtime, a framework,
-            a security-sensitive lib), run /archforge:adr to record why this dep was chosen over alternatives.
+            a security-sensitive lib), run /architect:adr to record why this dep was chosen over alternatives.
 EOF
 fi
 
@@ -70,7 +70,7 @@ if [ -n "$NEW_TOP_DIRS" ]; then
         ;;
     esac
     cat <<EOF >&2
-[archforge] Reminder: new top-level directory \`$dir/\` detected.
+[architect] Reminder: new top-level directory \`$dir/\` detected.
             If this represents a new module/component in the system, consider updating ARCHITECTURE.md
             (high-level structure, decision index) and possibly the C4 container diagram.
 EOF
@@ -102,8 +102,8 @@ fi
 
 if [ "$SHOULD_NUDGE_OBSERVE" -eq 1 ]; then
   cat <<EOF >&2
-[archforge] Reminder: ${MODULES_TOUCHED} modules touched in this session, and architectural observation hasn't run recently.
-            Consider \`/archforge:observe\` to surface implicit decisions, stale deferrals, or strategy-without-architecture gaps.
+[architect] Reminder: ${MODULES_TOUCHED} modules touched in this session, and architectural observation hasn't run recently.
+            Consider \`/architect:observe\` to surface implicit decisions, stale deferrals, or strategy-without-architecture gaps.
 EOF
 fi
 

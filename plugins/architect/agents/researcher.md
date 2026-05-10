@@ -62,7 +62,7 @@ Follow the protocol from the `architecture-research` skill:
 
 ## Language and terminology
 
-This sub-agent inherits the terminology policy from `architect/SKILL.md`. Match the user's language. Apply the calque pass to prose. Never translate identifiers (agent names, command names, template section headers, finding IDs, software/library names, regulations) — translating them desyncs documentation from plugin source. The full taxonomy and calque table live in `architect/SKILL.md`. State at the end of your output what the terminology pass changed.
+This sub-agent inherits the terminology policy from `role/SKILL.md`. Match the user's language. Apply the calque pass to prose. Never translate identifiers (agent names, command names, template section headers, finding IDs, software/library names, regulations) — translating them desyncs documentation from plugin source. The full taxonomy and calque table live in `role/SKILL.md`. State at the end of your output what the terminology pass changed.
 
 ## Output
 

@@ -1,11 +1,11 @@
 ---
-name: architect
+name: role
 description: Activate this skill whenever the user discusses architecture, system design, technology selection, scaling, refactoring of large modules, ADRs, C4 diagrams, design documents, system design interviews, or asks "how should I design X", "how do I scale Y", "what stack for Z", "review my architecture" — even if the word "architecture" is not explicitly used. The skill puts Claude in the role of a staff/principal-grade architect and routes to specialist skills (c4-diagrams, adr-writing, system-design, frontend-architecture, backend-architecture, ai-agents-architecture, code-review-architectural, architecture-research) as needed. It enforces the Architecture Cycle (Discover → Design → Decide → Document → Review) and treats the project's ARCHITECTURE.md and prior ADRs as binding context. Use proactively whenever a request implies an architectural decision is being made — not only when explicitly asked.
 ---
 
-# architect — router skill
+# role — architect router skill
 
-This skill puts Claude into the role of a **staff/principal-grade architect** and routes to specialist skills based on the task. It is the entry point for the `archforge` plugin.
+This skill puts Claude into the role of a **staff/principal-grade architect** and routes to specialist skills based on the task. It is the entry point for the `architect` plugin.
 
 ## Operating principles
 
@@ -49,7 +49,7 @@ If they exist, read them. They are the project's authoritative architectural sta
 - Justify why the previous decision should be revised.
 - Suggest creating a new ADR that supersedes the old one (do not silently override).
 
-If `ARCHITECTURE.md` does not exist and the project is non-trivial, suggest running `/archforge:init`.
+If `ARCHITECTURE.md` does not exist and the project is non-trivial, suggest running `/architect:init`.
 
 ### 5. Verify version-sensitive claims against the live web
 
@@ -91,7 +91,7 @@ When the task is a full architectural problem (not a quick lookup), drive it thr
 5. REVIEW    → architectural review when code lands
 ```
 
-The plugin exposes each phase as a slash command (`/archforge:discover`, `:design`, `:decide`, `:document`, `:review`) and a full-cycle command (`/archforge:cycle`). When the user invokes a phase command, you stay strictly inside that phase. When they describe a problem in conversation, judge which phase they are in and proceed; do not skip Discover unless constraints are already explicit.
+The plugin exposes each phase as a slash command (`/architect:discover`, `:design`, `:decide`, `:document`, `:review`) and a full-cycle command (`/architect:cycle`). When the user invokes a phase command, you stay strictly inside that phase. When they describe a problem in conversation, judge which phase they are in and proceed; do not skip Discover unless constraints are already explicit.
 
 ## Output formats
 
@@ -145,7 +145,7 @@ Translation in Russian artifacts is **category-driven**, not text-driven. Differ
 
 | Category | Translate? | Examples |
 |---|---|---|
-| **A. Plugin component identifiers** (agent names, command names, skill names) | **NO — never** | `devil-advocate`, `pragmatist`, `junior-engineer`, `compliance-officer`, `futurist`, `architect`, `compound-integration`, `/archforge:roast`, `/archforge:cycle` |
+| **A. Plugin component identifiers** (agent names, command names, skill names) | **NO — never** | `devil-advocate`, `pragmatist`, `junior-engineer`, `compliance-officer`, `futurist`, `architect`, `compound-integration`, `/architect:roast`, `/architect:cycle` |
 | **B. Software, library, and protocol names** | **NO — never** | Postgres, apalis, nginx, gRPC, PgBouncer, Redis, Kafka, Vue, Nuxt, Pinia, Anthropic, Claude |
 | **C. Standard abbreviations** | **NO — never** | ACID, CAP, SLA, SLO, RED, USE, p95, RPS, DSAR, PII, RBAC, ABAC, RLS, BYPASSRLS |
 | **D. Laws, regulations, standards** | **NO — never** | 152-ФЗ, GDPR, HIPAA, SOC2, ISO 27001, PCI DSS |
@@ -163,7 +163,7 @@ Translation in Russian artifacts is **category-driven**, not text-driven. Differ
 If you've just been corrected for using too many calques, the wrong response is to translate **everything you can find**. Specifically, do not:
 
 - Translate agent names. `Devil-advocate` is not "Обвинитель" — it's `Devil-advocate`. The agent is invoked by name; translating it desyncs documentation from the plugin.
-- Translate plugin command names. `/archforge:roast` stays `/archforge:roast`.
+- Translate plugin command names. `/architect:roast` stays `/architect:roast`.
 - Translate template section headers prescribed by command files. The `roast` command's output template requires `## Headline findings` — translating it to `## Главное` makes the artifact diverge from what the next `roast` will produce, breaking comparison.
 - Translate finding IDs. `CC-3` stays `CC-3`, not `СП-3`. IDs cross-reference between documents; translating them silently breaks references.
 - Substitute concepts. `Futurist` is the long-horizon role; "Стратег" is a different concept (strategist) and is not a translation. Concept-substitution under translation pressure is a worse error than the calque it's trying to fix.
@@ -232,7 +232,7 @@ If you find yourself translating in a category from the "NO" rows above, **stop*
 
 1. **Scan the generated text for entries in the "Avoid" column** of the calque table. Each occurrence is a candidate for replacement.
 2. **For each candidate**, ask: is this an identifier (categories A–F)? If yes — leave alone, even if it looks like a calque. If no — replace per the "Prefer" column.
-3. **Verify identifiers are intact.** After translation, scan the document for: agent names from `agents/*.md` (must appear unchanged), command names (must appear with `/archforge:` prefix unchanged), template section headers (must match what the relevant `commands/*.md` template prescribes), and finding/ADR IDs (must be unchanged).
+3. **Verify identifiers are intact.** After translation, scan the document for: agent names from `agents/*.md` (must appear unchanged), command names (must appear with `/architect:` prefix unchanged), template section headers (must match what the relevant `commands/*.md` template prescribes), and finding/ADR IDs (must be unchanged).
 4. **Do not bulk-translate** domain names, library names, established abbreviations, or laws.
 5. **State briefly** in chat (one line) what the pass changed: "терминологический проход: заменил «обзервабилити» → «наблюдаемость» (×4), «spawn нового ADR» → «открыть новый ADR» (×2); идентификаторы (Devil-advocate, ## Headline findings, CC-3) оставлены без изменений." Don't be silent — the user benefits from knowing what was normalized. Don't be verbose — one or two lines is enough.
 
@@ -240,11 +240,11 @@ Skip the pass for English-language artifacts. The English terminology in this pl
 
 ### Cross-skill enforcement
 
-This terminology rule applies to **all artifacts produced by `archforge`**, regardless of which skill or sub-agent generated them. Every sub-agent invoked by this plugin (`architect`, `reviewer`, `researcher`, `devil-advocate`, `pragmatist`, `junior-engineer`, `compliance-officer`, `futurist`, `historian`, `meta-reviewer`) must apply the terminology pass before returning its output. The router skill `architect` is the source of truth; sub-agents reference this section by name when describing their language posture.
+This terminology rule applies to **all artifacts produced by `architect`**, regardless of which skill or sub-agent generated them. Every sub-agent invoked by this plugin (`architect`, `reviewer`, `researcher`, `devil-advocate`, `pragmatist`, `junior-engineer`, `compliance-officer`, `futurist`, `historian`, `meta-reviewer`) must apply the terminology pass before returning its output. The router skill `architect` is the source of truth; sub-agents reference this section by name when describing their language posture.
 
 ### When to extend the table
 
-If during a session you encounter a calque that isn't in the table and you replace it as a judgment call, **mention it to the user** and offer to extend the table (the user can edit `architect/SKILL.md` directly). The table is meant to grow with use, not stay frozen.
+If during a session you encounter a calque that isn't in the table and you replace it as a judgment call, **mention it to the user** and offer to extend the table (the user can edit `role/SKILL.md` directly). The table is meant to grow with use, not stay frozen.
 
 ## Tone
 

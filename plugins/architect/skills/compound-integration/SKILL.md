@@ -1,17 +1,17 @@
 ---
 name: compound-integration
-description: Use this skill whenever the user wants to integrate archforge with the EveryInc Compound Engineering plugin (`compound-engineering`), or whenever both plugins are detected in the same project and an architectural task is being run. The skill defines exactly where the architecture cycle (Discover → Design → Decide → Document) plugs into the CE workflow (Brainstorm → Plan → Work → Review → Compound), how archforge artifacts (ADRs, ARCHITECTURE.md) coexist with CE artifacts (`docs/solutions/`, `docs/plans/`, `docs/brainstorms/`), and which hand-offs happen between the two plugins. Triggered by `/archforge:remember-compound-integration` and used as reference when CE commands are observed in a project alongside archforge commands.
+description: Use this skill whenever the user wants to integrate architect with the EveryInc Compound Engineering plugin (`compound-engineering`), or whenever both plugins are detected in the same project and an architectural task is being run. The skill defines exactly where the architecture cycle (Discover → Design → Decide → Document) plugs into the CE workflow (Brainstorm → Plan → Work → Review → Compound), how architect artifacts (ADRs, ARCHITECTURE.md) coexist with CE artifacts (`docs/solutions/`, `docs/plans/`, `docs/brainstorms/`), and which hand-offs happen between the two plugins. Triggered by `/architect:remember-compound-integration` and used as reference when CE commands are observed in a project alongside architect commands.
 ---
 
 # compound-integration
 
-Defines how `archforge` and the EveryInc `compound-engineering` plugin work together inside a single project, without duplicating each other's work.
+Defines how `architect` and the EveryInc `compound-engineering` plugin work together inside a single project, without duplicating each other's work.
 
 ## Why integrate at all
 
 The two plugins solve **adjacent but different** problems:
 
-| Concern | CE answers | archforge answers |
+| Concern | CE answers | architect answers |
 |---|---|---|
 | What feature should we build next? | yes (`/ce-ideate`) | no |
 | What does this feature need to do? | yes (`/ce-brainstorm`) | partially — only the architectural slice |
@@ -24,7 +24,7 @@ The two plugins solve **adjacent but different** problems:
 | What did we learn from this task? | yes (`/ce-compound`) | no |
 | **What architectural patterns/anti-patterns does this project hold?** | no | **yes — ARCHITECTURE.md, ADRs** |
 
-CE is about **getting work done well**. archforge is about **knowing why the system is shaped the way it is**. Both compound, but on different axes — features compound through `docs/solutions/`, architectural knowledge compounds through `ARCHITECTURE.md` and the ADR archive.
+CE is about **getting work done well**. architect is about **knowing why the system is shaped the way it is**. Both compound, but on different axes — features compound through `docs/solutions/`, architectural knowledge compounds through `ARCHITECTURE.md` and the ADR archive.
 
 ## The combined workflow
 
@@ -45,7 +45,7 @@ For an architecturally significant task, the combined cycle:
         │                            │
     NO  ▼                            ▼  YES
         │                  ┌─────────────────────┐
-        │                  │ /archforge:cycle   │
+        │                  │ /architect:cycle   │
         │                  │  ├─ discover         │
         │                  │  ├─ design           │
         │                  │  ├─ decide           │
@@ -67,7 +67,7 @@ For an architecturally significant task, the combined cycle:
             └─────────┬──────────┘
                       ▼
             ┌────────────────────┐
-            │ /archforge:review │  ADR-conformance review (archforge)
+            │ /architect:review │  ADR-conformance review (architect)
             └─────────┬──────────┘                          │
                       ▼                                      │
             ┌────────────────────┐                           │
@@ -76,16 +76,16 @@ For an architecturally significant task, the combined cycle:
                       │                                      │
               new architectural pattern emerged?             │
                       │                                      │
-                      └──── YES ──── /archforge:adr ────────┘
+                      └──── YES ──── /architect:adr ────────┘
 ```
 
-The two cycles are **interleaved**, not parallel — at each point only one is driving. archforge runs *inside* the planning gate, archforge runs *after* CE's code review, archforge runs again *if* the work surfaced a new architectural pattern.
+The two cycles are **interleaved**, not parallel — at each point only one is driving. architect runs *inside* the planning gate, architect runs *after* CE's code review, architect runs again *if* the work surfaced a new architectural pattern.
 
 ## When the task is **not** architecturally significant
 
-Most tasks aren't. For these, run pure CE — archforge stays silent.
+Most tasks aren't. For these, run pure CE — architect stays silent.
 
-**Triggers that mean archforge *should* engage:**
+**Triggers that mean architect *should* engage:**
 
 - New module / new top-level directory in the project.
 - New runtime dependency in a package manifest (lib that becomes part of the architecture).
@@ -96,7 +96,7 @@ Most tasks aren't. For these, run pure CE — archforge stays silent.
 - A pattern decision the team hasn't made before (auth model, error model, retry model, caching strategy).
 - The user explicitly says "this is architectural" or "this affects the architecture".
 
-**Triggers that mean archforge *should not* engage:**
+**Triggers that mean architect *should not* engage:**
 
 - Bug fix.
 - New endpoint following an established pattern.
@@ -106,17 +106,17 @@ Most tasks aren't. For these, run pure CE — archforge stays silent.
 - Style and formatting.
 - Documentation updates that don't touch ARCHITECTURE.md.
 
-When unsure — ask the user, briefly: "this looks architecturally relevant — run a archforge cycle, or skip and go to `/ce-plan`?"
+When unsure — ask the user, briefly: "this looks architecturally relevant — run a architect cycle, or skip and go to `/ce-plan`?"
 
 ## Artifact split — who owns what
 
 | Artifact | Owner | Purpose |
 |---|---|---|
-| `ARCHITECTURE.md` (root) | archforge | Living architectural state |
-| `docs/architecture/decisions/NNNN-*.md` | archforge | ADRs |
-| `docs/architecture/diagrams/*.md` | archforge | C4 diagrams |
-| `docs/architecture/research/*.md` | archforge | Discovery + design notes |
-| `docs/architecture/reviews/*.md` | archforge | ADR-conformance reviews |
+| `ARCHITECTURE.md` (root) | architect | Living architectural state |
+| `docs/architecture/decisions/NNNN-*.md` | architect | ADRs |
+| `docs/architecture/diagrams/*.md` | architect | C4 diagrams |
+| `docs/architecture/research/*.md` | architect | Discovery + design notes |
+| `docs/architecture/reviews/*.md` | architect | ADR-conformance reviews |
 | `AGENTS.md` (root) | shared (CE primary) | Process: how the team works with agents |
 | `CLAUDE.md` (root) | shared (CE primary) | Codebase context: stack, conventions |
 | `docs/brainstorms/*.md` | CE | Output of `/ce-brainstorm` |
@@ -136,41 +136,41 @@ To keep the knowledge graph navigable:
 
 ## Hand-offs — concrete steps
 
-### Hand-off 1: `/ce-brainstorm` → `/archforge:cycle` (when architectural)
+### Hand-off 1: `/ce-brainstorm` → `/architect:cycle` (when architectural)
 
 After `/ce-brainstorm` produces a requirements document, if the task is architecturally significant:
 
-1. The user (or Claude, if it spots architectural triggers in the brainstorm output) invokes `/archforge:cycle "<problem>"`.
-2. `/archforge:discover` reads the brainstorm doc as input alongside `ARCHITECTURE.md` and ADRs.
+1. The user (or Claude, if it spots architectural triggers in the brainstorm output) invokes `/architect:cycle "<problem>"`.
+2. `/architect:discover` reads the brainstorm doc as input alongside `ARCHITECTURE.md` and ADRs.
 3. The cycle runs through Discover → Design → Decide → Document.
 4. The resulting ADR is filed in `docs/architecture/decisions/`.
-5. The user proceeds to `/ce-plan` — archforge's recommendation is now an input to planning.
+5. The user proceeds to `/ce-plan` — architect's recommendation is now an input to planning.
 
-### Hand-off 2: `/archforge:cycle` → `/ce-plan`
+### Hand-off 2: `/architect:cycle` → `/ce-plan`
 
-After archforge produces an ADR:
+After architect produces an ADR:
 
 1. The user invokes `/ce-plan "<feature>"`.
 2. CE reads the brainstorm doc *and* the new ADR.
 3. The plan must reference the ADR by number when it touches the decided concern.
 
-### Hand-off 3: `/ce-code-review` → `/archforge:review`
+### Hand-off 3: `/ce-code-review` → `/architect:review`
 
 After CE's multi-agent code review finishes:
 
-1. The user invokes `/archforge:review` on the same target (PR, branch, files).
-2. archforge checks **conformance with ADRs**, not the things CE already covered (correctness, security, perf).
-3. If archforge blocks a change for ADR conflict, the resolution is one of:
+1. The user invokes `/architect:review` on the same target (PR, branch, files).
+2. architect checks **conformance with ADRs**, not the things CE already covered (correctness, security, perf).
+3. If architect blocks a change for ADR conflict, the resolution is one of:
    - The change is amended to conform.
-   - A new ADR is filed that supersedes the old one (archforge's blocking review explicitly suggests this path).
-4. archforge's review is saved to `docs/architecture/reviews/` alongside CE's findings.
+   - A new ADR is filed that supersedes the old one (architect's blocking review explicitly suggests this path).
+4. architect's review is saved to `docs/architecture/reviews/` alongside CE's findings.
 
-### Hand-off 4: `/ce-compound` → `/archforge:adr` (sometimes)
+### Hand-off 4: `/ce-compound` → `/architect:adr` (sometimes)
 
 After `/ce-compound` documents a task-level learning:
 
 1. The user (or Claude) checks: did this task surface a **reusable architectural pattern** (or anti-pattern)?
-2. If yes — invoke `/archforge:adr "<pattern>"` to capture it as an ADR.
+2. If yes — invoke `/architect:adr "<pattern>"` to capture it as an ADR.
 3. The ADR's Context section references the compound learning that surfaced it.
 4. The compound learning gets a one-line link back to the ADR.
 
@@ -180,21 +180,21 @@ This is the rare case — most compound learnings are task-level, not architectu
 
 A few discipline rules to prevent overlap:
 
-1. **Don't run `/ce-code-review` and `/archforge:review` on the same lens.** CE reviews correctness, security, perf, maintainability, testing. archforge reviews ADR conformance and structural smells. If CE's `ce-architecture-strategist` agent flags an ADR conflict, archforge's review can confirm and elaborate, but doesn't restart from scratch.
+1. **Don't run `/ce-code-review` and `/architect:review` on the same lens.** CE reviews correctness, security, perf, maintainability, testing. architect reviews ADR conformance and structural smells. If CE's `ce-architecture-strategist` agent flags an ADR conflict, architect's review can confirm and elaborate, but doesn't restart from scratch.
 
 2. **Don't write a `docs/solutions/` entry that is actually an ADR.** If the learning is "we now do X for all services because Y", that's an ADR. File it as an ADR. The compound entry can reference it.
 
-3. **Don't run `/archforge:cycle` for non-architectural changes.** It costs time and produces an ADR for noise. The triggers list above is the gate.
+3. **Don't run `/architect:cycle` for non-architectural changes.** It costs time and produces an ADR for noise. The triggers list above is the gate.
 
-4. **Don't duplicate the brainstorm.** archforge's discover phase reads the CE brainstorm and treats it as input — it doesn't re-elicit requirements from scratch.
+4. **Don't duplicate the brainstorm.** architect's discover phase reads the CE brainstorm and treats it as input — it doesn't re-elicit requirements from scratch.
 
 ## Materializing the integration
 
-The plugin command `/archforge:remember-compound-integration` writes a project-level integration block to `AGENTS.md` (or `CLAUDE.md` on user choice) so the rules above are loaded at every session start, automatically. The block points at this skill for the long version.
+The plugin command `/architect:remember-compound-integration` writes a project-level integration block to `AGENTS.md` (or `CLAUDE.md` on user choice) so the rules above are loaded at every session start, automatically. The block points at this skill for the long version.
 
 ## When to refresh the integration
 
-Re-run `/archforge:remember-compound-integration` if:
+Re-run `/architect:remember-compound-integration` if:
 
 - CE is upgraded and adds/renames commands (the integration block references them by name).
 - The team's process changes (e.g., you stop using `/ce-ideate`, you add a custom command).

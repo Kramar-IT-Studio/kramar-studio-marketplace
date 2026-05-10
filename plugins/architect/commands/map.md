@@ -3,7 +3,7 @@ description: Build or update a decision map — groups of architectural decision
 argument-hint: "(no arguments — reads ARCHITECTURE.md and existing ADRs)"
 ---
 
-# /archforge:map
+# /architect:map
 
 Construct a **decision map** — a meta-document that groups open architectural questions into logical clusters, makes dependencies between them explicit, and proposes a sensible order in which to run cycles.
 
@@ -15,11 +15,11 @@ The decision map is the antidote. It's not a roadmap (no dates), it's not a back
 
 ## When to run
 
-- **First-time architectural work on a project**, after `/archforge:init`, when the discovery surface is wide.
+- **First-time architectural work on a project**, after `/architect:init`, when the discovery surface is wide.
 - **Whenever `ARCHITECTURE.md` lists ≥3 open questions** that look related.
 - **Before starting a sequence of related cycles** (e.g., "AI agent layer", "RAG layer", "billing layer", "tenant isolation" — these are clearly entangled).
 
-The router skill `architect` should also propose `/archforge:map` proactively when it sees a user about to start a cycle that obviously depends on other unmade decisions.
+The router skill `architect` should also propose `/architect:map` proactively when it sees a user about to start a cycle that obviously depends on other unmade decisions.
 
 ## Inputs
 
@@ -115,7 +115,7 @@ After B1 decided: C2
 - **Hierarchy by force, not by date.** Group A items are above Group B items because they constrain Group B, not because they're "earlier in the roadmap".
 - **Be honest about deferral.** A "deferred" decision with no "wait for" condition is just hiding from the decision. Force the condition.
 - **Don't fabricate decisions.** If `ARCHITECTURE.md` only has two open questions and one ADR, the map will be small. That's fine.
-- **Update on every cycle close.** When `/archforge:document` lands an ADR, the map should also be updated — that decision moves to "decided" with a link, and any decisions it unblocks are marked.
+- **Update on every cycle close.** When `/architect:document` lands an ADR, the map should also be updated — that decision moves to "decided" with a link, and any decisions it unblocks are marked.
 
 ## Sources of new map entries
 
@@ -123,14 +123,14 @@ The map is updated from several sources:
 
 - **Manual addition by the architect** — most common.
 - **Cycle outputs** — when an ADR lands, the map's index updates.
-- **`/archforge:observe`** — when run, observe surfaces architectural gaps (implicit decisions, stale deferrals, strategy-without-architecture, drifted ADRs) and offers to add them to the map. This is the recommended way to keep the map honest about the project's actual state.
+- **`/architect:observe`** — when run, observe surfaces architectural gaps (implicit decisions, stale deferrals, strategy-without-architecture, drifted ADRs) and offers to add them to the map. This is the recommended way to keep the map honest about the project's actual state.
 - **External signals** — incidents, customer requests, regulatory changes can each produce a new map entry.
 
 ## Output to chat
 
 - The path of the saved/updated map.
 - A summary: how many open decisions, how many groups, what's at the top of "next up".
-- A suggestion: "Run `/archforge:cycle \"<top item>\"` to take the first decision."
+- A suggestion: "Run `/architect:cycle \"<top item>\"` to take the first decision."
 
 ## When the map says "you're not ready to decide"
 

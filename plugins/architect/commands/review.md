@@ -3,7 +3,7 @@ description: Phase 5 of the Architecture Cycle — architectural code review of 
 argument-hint: "[path or git ref] (optional; defaults to staged + last commit)"
 ---
 
-# /archforge:review
+# /architect:review
 
 Phase 5 of the Architecture Cycle. Architectural review of code, with the project's ADRs and `ARCHITECTURE.md` as binding context.
 
@@ -21,7 +21,7 @@ Use the `code-review-architectural` skill. Output structure (mandatory):
 
 ```
 ## Status
-**Open** — written YYYY-MM-DD by /archforge:review.
+**Open** — written YYYY-MM-DD by /architect:review.
 (When findings are addressed, this header is updated to "Applied YYYY-MM-DD" with a closeout block at the end.)
 
 ## Summary
@@ -52,7 +52,7 @@ What's good in this change. Reinforce.
 
 ## Closeout — when blockers are addressed
 
-A review is not done when it's written. It's done when its findings are either applied or explicitly accepted as risk. When you (or a follow-up `/archforge:review` invocation) confirm that blockers have been addressed, **update the same review file** by:
+A review is not done when it's written. It's done when its findings are either applied or explicitly accepted as risk. When you (or a follow-up `/architect:review` invocation) confirm that blockers have been addressed, **update the same review file** by:
 
 1. Changing the `## Status` line from "Open" to "Applied YYYY-MM-DD" (or "Partially applied" if some items remain).
 2. Appending a `## Closeout` section at the end of the file with this structure:
@@ -83,7 +83,7 @@ Save the review as `docs/architecture/reviews/YYYY-MM-DD-<short-summary>.md`. Al
 
 ## When to recommend a new ADR
 
-If the changes contain an implicit decision that isn't recorded — new dependency, new module, new pattern — flag it and suggest running `/archforge:adr` to capture it. Implicit decisions are how architectural debt accumulates.
+If the changes contain an implicit decision that isn't recorded — new dependency, new module, new pattern — flag it and suggest running `/architect:adr` to capture it. Implicit decisions are how architectural debt accumulates.
 
 ## Output to chat
 

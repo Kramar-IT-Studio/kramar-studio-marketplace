@@ -3,13 +3,13 @@ description: Phase 1.5 of the Architecture Cycle — gather current information 
 argument-hint: "<focused research question>"
 ---
 
-# /archforge:research
+# /architect:research
 
 The optional but often-decisive phase between Discover and Design. Use when answering the architectural question requires **current** information — versions, prices, benchmarks, capabilities, regulatory status — that pretrained knowledge cannot supply reliably.
 
 ## When to run
 
-Run after `/archforge:discover` and before `/archforge:design` when the discovery surfaced any of:
+Run after `/architect:discover` and before `/architect:design` when the discovery surfaced any of:
 
 - **Version-sensitive claims**: "what's the current state of <framework>", "is <library> still recommended", "did <provider> add <feature>".
 - **Comparative analysis**: head-to-head between options where current characteristics matter (pricing, performance, certifications).
@@ -75,7 +75,7 @@ Save to `docs/architecture/research/YYYY-MM-DD-<slug>-research.md`. Slug matches
 
 - One-paragraph headline finding.
 - Path of the saved digest.
-- Suggestion: "When the design phase runs, it will read this research as primary input. Run `/archforge:design \"<problem>\"` next."
+- Suggestion: "When the design phase runs, it will read this research as primary input. Run `/architect:design \"<problem>\"` next."
 
 ## When research changes the framing
 
@@ -83,6 +83,6 @@ Sometimes research surfaces a constraint that **invalidates the discovery output
 
 1. Do not silently proceed to design with the new information.
 2. Tell the user which discovery assumption is now broken.
-3. Suggest: "Re-run `/archforge:discover` with this new information, or amend the existing discovery document with a 'Round 2 (post-research)' section."
+3. Suggest: "Re-run `/architect:discover` with this new information, or amend the existing discovery document with a 'Round 2 (post-research)' section."
 
 The `architect` skill should treat this as a normal part of the cycle, not a failure. Discovery rounds compound — each round refines the problem.

@@ -1,4 +1,4 @@
-# archforge
+# architect
 
 **English** | [Русский](./README.ru.md)
 
@@ -8,7 +8,7 @@ Architecture toolkit for Claude Code. A staff/principal-grade architect on tap, 
 
 > **Эта версия — на английском (универсально). Русские заметки идут параллельно курсивом, где это полезно.**
 >
-> *Этот плагин — про архитектурный цикл и его документирование. Маршрутизирующий скилл `architect` активирует архитектурный режим, узкие скиллы дают глубину под конкретный выход (диаграмма, ADR, ревью), команды запускают этапы цикла, агенты делают долгие автономные задачи.*
+> *Этот плагин — про архитектурный цикл и его документирование. Маршрутизирующий скилл `role` активирует архитектурный режим, узкие скиллы дают глубину под конкретный выход (диаграмма, ADR, ревью), команды запускают этапы цикла, агенты делают долгие автономные задачи.*
 
 ---
 
@@ -38,7 +38,7 @@ Architecture toolkit for Claude Code. A staff/principal-grade architect on tap, 
                    └──── feeds back into DISCOVER for next change
 ```
 
-Each phase has a slash command. You can also run the whole cycle for a single problem with `/archforge:cycle "<problem statement>"`.
+Each phase has a slash command. You can also run the whole cycle for a single problem with `/architect:cycle "<problem statement>"`.
 
 *Цикл повторяется. Каждый проход обогащает `docs/architecture/` — это и есть «компаунд»: следующее решение опирается на предыдущие, а не изобретается заново.*
 
@@ -46,27 +46,27 @@ Each phase has a slash command. You can also run the whole cycle for a single pr
 
 ## Components at a glance
 
-### Slash commands (`/archforge:*`)
+### Slash commands (`/architect:*`)
 
 | Command | Purpose |
 |---|---|
-| `/archforge:init` | Bootstrap project with `ARCHITECTURE.md` and `docs/architecture/` |
-| `/archforge:upgrade` | Migrate the project's artifacts to the currently installed plugin version |
-| `/archforge:map` | Build or update the decision map (groups of open decisions, dependencies, suggested order) |
-| `/archforge:observe` | Find architectural gaps — implicit decisions in code, stale deferrals, strategy-without-architecture |
-| `/archforge:discover <topic>` | Phase 1 — gather context |
-| `/archforge:research <topic>` | Phase 1.5 — gather current information from the web |
-| `/archforge:design <topic>` | Phase 2 — generate alternatives |
-| `/archforge:decide <topic>` | Phase 3 — choose with justification |
-| `/archforge:document <topic>` | Phase 4 — emit ADR + update root doc |
-| `/archforge:review [path]` | Phase 5 — architectural code review (with closeout tracking) |
-| `/archforge:roast <ADR-NNNN\|path> [--roles=...]` | Adversarial multi-perspective review (5 roles) |
-| `/archforge:meta-review <target>` | Plugin-conformance check — does this artifact match the templates and rules the plugin promised? Catches identifier-translation, template drift, missing language pass, broken cross-references |
-| `/archforge:cycle <topic> [--scale=light\|standard\|deep]` | Run the full cycle end-to-end with detail scaled to complexity (auto-roast + auto-meta-review at deep) |
-| `/archforge:adr <topic>` | Shortcut: jump straight to ADR drafting |
-| `/archforge:diagram <type> <subject>` | Generate a diagram: `c4-context\|c4-container\|c4-component\|sequence\|state\|er\|deployment` |
-| `/archforge:c4 <level> <subject>` | Alias for `/archforge:diagram c4-<level>` (kept for compatibility) |
-| `/archforge:remember-compound-integration [--lang=en\|ru\|auto]` | Materialize integration with the EveryInc `compound-engineering` plugin |
+| `/architect:init` | Bootstrap project with `ARCHITECTURE.md` and `docs/architecture/` |
+| `/architect:upgrade` | Migrate the project's artifacts to the currently installed plugin version |
+| `/architect:map` | Build or update the decision map (groups of open decisions, dependencies, suggested order) |
+| `/architect:observe` | Find architectural gaps — implicit decisions in code, stale deferrals, strategy-without-architecture |
+| `/architect:discover <topic>` | Phase 1 — gather context |
+| `/architect:research <topic>` | Phase 1.5 — gather current information from the web |
+| `/architect:design <topic>` | Phase 2 — generate alternatives |
+| `/architect:decide <topic>` | Phase 3 — choose with justification |
+| `/architect:document <topic>` | Phase 4 — emit ADR + update root doc |
+| `/architect:review [path]` | Phase 5 — architectural code review (with closeout tracking) |
+| `/architect:roast <ADR-NNNN\|path> [--roles=...]` | Adversarial multi-perspective review (5 roles) |
+| `/architect:meta-review <target>` | Plugin-conformance check — does this artifact match the templates and rules the plugin promised? Catches identifier-translation, template drift, missing language pass, broken cross-references |
+| `/architect:cycle <topic> [--scale=light\|standard\|deep]` | Run the full cycle end-to-end with detail scaled to complexity (auto-roast + auto-meta-review at deep) |
+| `/architect:adr <topic>` | Shortcut: jump straight to ADR drafting |
+| `/architect:diagram <type> <subject>` | Generate a diagram: `c4-context\|c4-container\|c4-component\|sequence\|state\|er\|deployment` |
+| `/architect:c4 <level> <subject>` | Alias for `/architect:diagram c4-<level>` (kept for compatibility) |
+| `/architect:remember-compound-integration [--lang=en\|ru\|auto]` | Materialize integration with the EveryInc `compound-engineering` plugin |
 
 All commands respect the project's `ARCHITECTURE.md` and prior ADRs as primary context.
 
@@ -74,7 +74,7 @@ All commands respect the project's `ARCHITECTURE.md` and prior ADRs as primary c
 
 The router:
 
-- **`architect`** — entry point. Activates the architect persona, decides which specialist skills to consult, enforces the cycle when relevant. Triggers automatically on architectural intent (any mention of "architecture", "design", "scaling", "stack choice", "trade-offs", "review architecture", etc.) even without a slash command.
+- **`role`** — entry point (skill identifier `architect:role`). Activates the architect persona, decides which specialist skills to consult, enforces the cycle when relevant. Triggers automatically on architectural intent (any mention of "architecture", "design", "scaling", "stack choice", "trade-offs", "review architecture", etc.) even without a slash command.
 
 The specialists (loaded by router or directly):
 
@@ -86,7 +86,7 @@ The specialists (loaded by router or directly):
 - **`ai-agents-architecture`** — agent design, tool-use, memory, evaluation, latency/cost budgets, prompt-injection threat model.
 - **`code-review-architectural`** — review with structural lens (boundaries, coupling, cohesion, ADR conformance), not stylistic.
 - **`architecture-research`** — protocol for getting current information when claims depend on versions, releases, benchmarks, or current best practices.
-- **`compound-integration`** — defines how `archforge` interleaves with the EveryInc `compound-engineering` plugin: which phase plugs in where, who owns which artifact, how to avoid double work.
+- **`compound-integration`** — defines how `architect` interleaves with the EveryInc `compound-engineering` plugin: which phase plugs in where, who owns which artifact, how to avoid double work.
 
 ### Sub-agents
 
@@ -96,7 +96,7 @@ Three structural roles for long-running tasks:
 - **`reviewer`** — autonomous architectural review of a directory or PR.
 - **`researcher`** — gathers up-to-date information from the web on a focused topic, returns a digest.
 
-Five roast roles for adversarial multi-perspective review (invoked via `/archforge:roast`):
+Five roast roles for adversarial multi-perspective review (invoked via `/architect:roast`):
 
 - **`devil-advocate`** — adversarial pressure-test. Failure modes, hidden assumptions, edge cases, concurrency bugs.
 - **`pragmatist`** — operational realism. On-call burden, real cost, skills/bus factor, deployment risk.
@@ -104,9 +104,9 @@ Five roast roles for adversarial multi-perspective review (invoked via `/archfor
 - **`compliance-officer`** — regulatory and security exposure. PII flows, jurisdiction, audit, incident response.
 - **`futurist`** — 1-3 year horizon. Structural drift, technology lifecycle, hiring, regulatory drift.
 
-One conformance role (invoked via `/archforge:meta-review`):
+One conformance role (invoked via `/architect:meta-review`):
 
-- **`meta-reviewer`** — plugin-conformance QA. Reads artifacts produced by `archforge` and verifies they match the plugin's own templates and rules: required sections present and verbatim, identifiers (agent names, command names, finding IDs) untranslated, language pass applied per `architect/SKILL.md`, cross-references resolved, lifecycle states valid. Catches the plugin failing to follow its own rules.
+- **`meta-reviewer`** — plugin-conformance QA. Reads artifacts produced by `architect` and verifies they match the plugin's own templates and rules: required sections present and verbatim, identifiers (agent names, command names, finding IDs) untranslated, language pass applied per `role/SKILL.md`, cross-references resolved, lifecycle states valid. Catches the plugin failing to follow its own rules.
 
 Sub-agents are useful for tasks that would otherwise pollute the main thread with research or large reviews.
 
@@ -145,13 +145,13 @@ Per [Compound Engineering's split](https://wotai.co/blog/compound-engineering-ag
 6. **Open questions** — known unknowns. Architectural questions deferred to future cycles.
 7. **Anti-patterns to avoid** — project-specific traps the team has agreed to steer clear of.
 
-Claude reads `ARCHITECTURE.md` at session start (via the `architect` skill's protocol) and treats it as binding context. Every ADR update should also touch `ARCHITECTURE.md` if it changes anything in sections 1–6.
+Claude reads `ARCHITECTURE.md` at session start (via the `role` skill's protocol) and treats it as binding context. Every ADR update should also touch `ARCHITECTURE.md` if it changes anything in sections 1–6.
 
 ---
 
 ## Recommended directory layout in your project
 
-After `/archforge:init` you'll have:
+After `/architect:init` you'll have:
 
 ```
 your-project/
@@ -166,7 +166,7 @@ your-project/
         ├── diagrams/                  ← C4 diagrams as .md (Mermaid) or images
         │   ├── context.md
         │   └── container.md
-        ├── research/                  ← research digests from /archforge:discover
+        ├── research/                  ← research digests from /architect:discover
         └── reviews/                   ← architectural code-review notes
 ```
 
@@ -176,7 +176,7 @@ You don't have to follow this layout — every command accepts a `--root` style 
 
 ## Tone and posture
 
-`archforge` is opinionated. The router skill `architect` instructs Claude to:
+`architect` is opinionated. The router skill `role` instructs Claude to:
 
 - Push back on weak proposals; argue position until presented with a real counter-argument.
 - Refuse to give technology recommendations without first establishing constraints and quality attributes.

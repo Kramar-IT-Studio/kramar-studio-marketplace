@@ -3,7 +3,7 @@ description: Phase 4 of the Architecture Cycle — write the ADR, update ARCHITE
 argument-hint: "<problem statement>"
 ---
 
-# /archforge:document
+# /architect:document
 
 Phase 4 of the Architecture Cycle. Persist the decision so the team and future agents can find it.
 
@@ -13,7 +13,7 @@ Phase 4 of the Architecture Cycle. Persist the decision so the team and future a
 - Decision summary: read the most recent file in `docs/architecture/research/` matching the problem (`-decision.md`).
 - Project context: `./ARCHITECTURE.md`, existing ADRs in `./docs/architecture/decisions/`.
 
-If no decision summary exists, refuse and ask the user to run `/archforge:decide` first.
+If no decision summary exists, refuse and ask the user to run `/architect:decide` first.
 
 ## What to produce
 
@@ -66,6 +66,6 @@ Tell the user:
 - The new ADR number and file path.
 - Which sections of `ARCHITECTURE.md` were updated.
 - Which diagrams were touched.
-- Suggestion: "Once this is implemented, run `/archforge:review` against the changed code."
+- Suggestion: "Once this is implemented, run `/architect:review` against the changed code."
 
 Don't commit — leave that to the user.

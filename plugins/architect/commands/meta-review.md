@@ -1,11 +1,11 @@
 ---
-description: Plugin-conformance check on artifacts produced by archforge. Verifies templates are followed, identifiers are preserved (not translated), language pass was applied, cross-references resolve, lifecycle states are valid. Does NOT evaluate architectural quality (use /archforge:roast for that). Catches the plugin failing to follow its own rules.
+description: Plugin-conformance check on artifacts produced by architect. Verifies templates are followed, identifiers are preserved (not translated), language pass was applied, cross-references resolve, lifecycle states are valid. Does NOT evaluate architectural quality (use /architect:roast for that). Catches the plugin failing to follow its own rules.
 argument-hint: "<path-to-artifact-or-directory>   examples: ADR-0002 | docs/architecture/reviews/2026-05-09-roast-foo/ | latest-roast | all"
 ---
 
-# /archforge:meta-review
+# /architect:meta-review
 
-Meta-review of `archforge` artifacts. Reads them, compares to the plugin's own templates and rules (in command files and the `architect` skill), reports divergences.
+Meta-review of `architect` artifacts. Reads them, compares to the plugin's own templates and rules (in command files and the `architect` skill), reports divergences.
 
 This is **not** an architectural review. It is the plugin's QA on itself — does the artifact match what the plugin promised it would look like?
 
@@ -19,7 +19,7 @@ This is **not** an architectural review. It is the plugin's QA on itself — doe
 ## When NOT to run
 
 - During an active cycle before the artifact is finalized — meta-review of a draft is noise.
-- On non-`archforge` artifacts. The meta-reviewer doesn't lint user-authored code or unrelated docs.
+- On non-`architect` artifacts. The meta-reviewer doesn't lint user-authored code or unrelated docs.
 
 ## Inputs
 
@@ -39,7 +39,7 @@ This is **not** an architectural review. It is the plugin's QA on itself — doe
 - If it's `ADR-NNNN`, find `docs/architecture/decisions/NNNN-*.md`.
 - If it's `latest-roast`, list `docs/architecture/reviews/` and pick the most recent directory matching `*-roast-*`.
 - If it's `latest`, find the highest-numbered ADR.
-- If it's `all`, build a list of all artifact paths under `docs/architecture/` (excluding `.archforge-version` and `README.md`).
+- If it's `all`, build a list of all artifact paths under `docs/architecture/` (excluding `.architect-version` and `README.md`).
 - If it can't be resolved, ask which artifact the user meant.
 
 ### 2. Load the plugin's source as the specification
@@ -47,7 +47,7 @@ This is **not** an architectural review. It is the plugin's QA on itself — doe
 The meta-reviewer needs the **current plugin source files** to know what the templates and rules require. Read:
 
 - `${CLAUDE_PLUGIN_ROOT}/commands/discover.md`, `design.md`, `decide.md`, `document.md`, `review.md`, `roast.md`, `cycle.md`, `adr.md`, `diagram.md`, `map.md`, `observe.md`, `remember-compound-integration.md` — these prescribe artifact structures.
-- `${CLAUDE_PLUGIN_ROOT}/skills/architect/SKILL.md` — language taxonomy and calque table.
+- `${CLAUDE_PLUGIN_ROOT}/skills/role/SKILL.md` — language taxonomy and calque table.
 - `${CLAUDE_PLUGIN_ROOT}/skills/adr-writing/SKILL.md` — ADR template details.
 
 You don't read every file every time; read what's relevant to the target's artifact type.
@@ -94,15 +94,15 @@ If the meta-review finds no divergences (artifact conforms cleanly), say that as
 
 ## Auto-meta-review in deep cycles
 
-When `/archforge:cycle --scale=deep` produces a roast, **automatically chain a meta-review on the roast directory** as the final step before declaring the cycle done. This catches the kind of bug v0.4.0-rc1 had — where the roast appeared to succeed but its per-role outputs were structurally divergent.
+When `/architect:cycle --scale=deep` produces a roast, **automatically chain a meta-review on the roast directory** as the final step before declaring the cycle done. This catches the kind of bug v0.4.0-rc1 had — where the roast appeared to succeed but its per-role outputs were structurally divergent.
 
 The user sees the meta-review's summary in chat. If high-severity divergences are present, the cycle pauses and asks whether to fix them now or defer.
 
 ## Cross-references between meta-review and other reviews
 
 - Meta-review and roast are **complementary, not overlapping**. Roast attacks the substance; meta-review checks the form. Run both on important artifacts.
-- Meta-review and `/archforge:review` (architectural code review) are also complementary. Code review looks at code; meta-review looks at architectural artifacts.
-- Meta-review and `/archforge:diff` (planned for v0.5) will overlap slightly — diff checks whether ADR rules live in code; meta-review checks whether ADR conforms to template. Different lenses.
+- Meta-review and `/architect:review` (architectural code review) are also complementary. Code review looks at code; meta-review looks at architectural artifacts.
+- Meta-review and `/architect:diff` (planned for v0.5) will overlap slightly — diff checks whether ADR rules live in code; meta-review checks whether ADR conforms to template. Different lenses.
 
 ## Failure modes the meta-reviewer was built to catch
 

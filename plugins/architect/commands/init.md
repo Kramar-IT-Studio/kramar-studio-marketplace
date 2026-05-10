@@ -3,7 +3,7 @@ description: Bootstrap the project for architectural work — create ARCHITECTUR
 argument-hint: "(no arguments)"
 ---
 
-# /archforge:init
+# /architect:init
 
 You are bootstrapping this project for architectural work.
 
@@ -44,8 +44,8 @@ You are bootstrapping this project for architectural work.
 5. **Tell the user**:
    - That `ARCHITECTURE.md` and `docs/architecture/` were created.
    - The 3–5 open questions you put in. These are the seed for the next architectural conversation.
-   - **If the project has existing strategic context** (`STRATEGY.md`, README with rich product description, prior architectural notes) **or you generated ≥3 open questions**: suggest running `/archforge:map` next to lay out the dependency graph between decisions before running individual cycles.
-   - **Otherwise**: suggest `/archforge:cycle "<topic>"` for a single decision walk-through.
+   - **If the project has existing strategic context** (`STRATEGY.md`, README with rich product description, prior architectural notes) **or you generated ≥3 open questions**: suggest running `/architect:map` next to lay out the dependency graph between decisions before running individual cycles.
+   - **Otherwise**: suggest `/architect:cycle "<topic>"` for a single decision walk-through.
 
 6. **Do not commit**. Leave that to the user.
 

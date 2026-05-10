@@ -8,8 +8,8 @@ The architectural trail of this project. Updated continuously alongside the code
 |---|---|
 | [`decisions/`](./decisions/) | **ADRs** — one file per architectural decision. Numbered, never deleted. Index below. |
 | [`diagrams/`](./diagrams/) | **C4 diagrams** as Mermaid `.md` files (or sources alongside images). Context (L1), Container (L2), Component (L3) views. |
-| [`research/`](./research/) | **Discovery and design notes** from `/archforge:discover` and `/archforge:design`. Snapshots of the problem space at the time of investigation. |
-| [`reviews/`](./reviews/) | **Architectural reviews** from `/archforge:review`. Reviews of substantial changesets, kept for posterity. |
+| [`research/`](./research/) | **Discovery and design notes** from `/architect:discover` and `/architect:design`. Snapshots of the problem space at the time of investigation. |
+| [`reviews/`](./reviews/) | **Architectural reviews** from `/architect:review`. Reviews of substantial changesets, kept for posterity. |
 
 The root [`ARCHITECTURE.md`](../../ARCHITECTURE.md) is the living high-level document. ADRs and diagrams here are the artifacts that produced it.
 
@@ -26,9 +26,9 @@ section 5.
 
 ## How to use
 
-- New architectural decision → `/archforge:cycle "<problem>"` (full process) or `/archforge:adr "<decision>"` (shortcut).
-- Need a diagram → `/archforge:c4 <level> "<subject>"`.
-- Architectural review of a PR or directory → `/archforge:review [path]`.
+- New architectural decision → `/architect:cycle "<problem>"` (full process) or `/architect:adr "<decision>"` (shortcut).
+- Need a diagram → `/architect:c4 <level> "<subject>"`.
+- Architectural review of a PR or directory → `/architect:review [path]`.
 - Just looking around → start with [`../../ARCHITECTURE.md`](../../ARCHITECTURE.md), then drill into ADRs.
 
 ADRs are append-only. Decisions that no longer hold are not edited — they're superseded by a new ADR. This preserves the history of how the team's thinking evolved.

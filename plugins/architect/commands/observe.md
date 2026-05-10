@@ -3,7 +3,7 @@ description: Architectural gap analysis. Scans the project's code, STRATEGY, ARC
 argument-hint: "(no arguments)"
 ---
 
-# /archforge:observe
+# /architect:observe
 
 Project-wide architectural gap analysis. The plugin's other commands move forward — they take new decisions, write new ADRs. This command looks **sideways and backwards** to find decisions you've already made (in code, in deferrals) that aren't yet captured anywhere visible.
 
@@ -82,8 +82,8 @@ ARCHITECTURE.md lists anti-patterns; here are matches found in the code.
 
 ## Suggested next actions
 - Items to add to `decision-map.md` as new open decisions.
-- Items to file as `/archforge:adr` for already-implicit decisions.
-- Items requiring research (`/archforge:research`) before they can become full cycles.
+- Items to file as `/architect:adr` for already-implicit decisions.
+- Items requiring research (`/architect:research`) before they can become full cycles.
 - Items to leave alone (low severity or genuinely deferrable).
 ```
 
@@ -138,7 +138,7 @@ Read `ARCHITECTURE.md`'s anti-patterns section. For each, check the code for occ
 - **Cap at 15 findings.** If there are more, show the top 15 and tell the user "there are more — re-run after addressing these and observe will refresh."
 - **No fabrication.** If you can't tell from the code whether a decision was made, say "couldn't determine" and skip — don't manufacture findings.
 - **Distinguish "gap in documentation" from "gap in design".** Some gaps are just missing docs (file an ADR for an existing decision). Others are missing decisions (something needs to actually be decided). Mark which.
-- **Don't count `/archforge:upgrade` migrations as gaps.** Things that are "missing" because the project is on an older plugin version are upgrade work, not architectural gaps.
+- **Don't count `/architect:upgrade` migrations as gaps.** Things that are "missing" because the project is on an older plugin version are upgrade work, not architectural gaps.
 
 ## Output to chat
 

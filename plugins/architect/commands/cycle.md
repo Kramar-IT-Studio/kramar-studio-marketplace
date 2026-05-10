@@ -3,7 +3,7 @@ description: Run the full Architecture Cycle (Discover → [Research] → Design
 argument-hint: "<problem statement> [--scale=light|standard|deep]"
 ---
 
-# /archforge:cycle
+# /architect:cycle
 
 Run the full architecture cycle for one problem in a single session. This is the long-form command — for quick decisions use the individual phase commands.
 
@@ -37,34 +37,34 @@ State the chosen scale at the start of the cycle: "Running this cycle at `standa
 
 Walk these phases **in order**, pausing for user input at each gate:
 
-1. **Discover** (`/archforge:discover` logic):
+1. **Discover** (`/architect:discover` logic):
    - Produce the discovery doc, sized to the chosen scale.
    - Pause: present open questions to the user. **Wait for answers** before continuing. Do not assume.
 
-2. **Research** (`/archforge:research` logic) — **mandatory at `deep`, optional at `standard`, skipped at `light`**:
+2. **Research** (`/architect:research` logic) — **mandatory at `deep`, optional at `standard`, skipped at `light`**:
    - After discovery answers come back, scan them for version-sensitive, comparative, regulatory, or pricing claims.
    - If any are present at `standard` scale, propose the research phase explicitly: "the following claims need current information: [list]. Run research, or proceed to design with pretrained knowledge?"
    - At `deep` scale, run research without asking.
    - Save digest to `docs/architecture/research/<slug>-research.md`.
    - If research surfaces a constraint that invalidates discovery, run a second discovery round before design.
 
-3. **Design** (`/archforge:design` logic):
+3. **Design** (`/architect:design` logic):
    - Once the user has answered the open questions and research (if any) is in, produce alternatives with trade-offs (count by scale).
    - Pause: present the alternatives and the comparison matrix. **Ask which the user leans toward and why.** This is also where the architect skill should push back if the user's lean looks weak for the stated forces.
 
-4. **Decide** (`/archforge:decide` logic):
+4. **Decide** (`/architect:decide` logic):
    - Produce the decision summary.
    - Pause: confirm with the user. If they have second thoughts, loop back to design.
-   - **At `deep` scale**: automatically invoke `/archforge:roast` on the decision summary before proceeding to Document. Then, automatically chain `/archforge:meta-review` on the roast directory to verify structural conformance (template adherence, identifier preservation, language-pass evidence). The user reviews both the roast findings and the meta-review and chooses one of: (a) apply findings and proceed to Document, (b) apply findings and re-roast, (c) step back to Design or Discover. If meta-review shows high-severity divergences, surface them prominently — those are plugin-conformance bugs that must be fixed before the artifact is committed.
+   - **At `deep` scale**: automatically invoke `/architect:roast` on the decision summary before proceeding to Document. Then, automatically chain `/architect:meta-review` on the roast directory to verify structural conformance (template adherence, identifier preservation, language-pass evidence). The user reviews both the roast findings and the meta-review and chooses one of: (a) apply findings and proceed to Document, (b) apply findings and re-roast, (c) step back to Design or Discover. If meta-review shows high-severity divergences, surface them prominently — those are plugin-conformance bugs that must be fixed before the artifact is committed.
 
-5. **Document** (`/archforge:document` logic):
+5. **Document** (`/architect:document` logic):
    - Write the ADR.
    - Update `ARCHITECTURE.md` and diagrams.
    - Update the decision index.
-   - **At `deep` scale, if a roast was run**: link the roast summary in the ADR's review trail. Also chain `/archforge:meta-review` on the freshly-written ADR to catch any template divergence in the ADR itself.
+   - **At `deep` scale, if a roast was run**: link the roast summary in the ADR's review trail. Also chain `/architect:meta-review` on the freshly-written ADR to catch any template divergence in the ADR itself.
 
 6. **Hand-off**:
-   - Tell the user the ADR number, the files touched, and the next step (implementing, then `/archforge:review`).
+   - Tell the user the ADR number, the files touched, and the next step (implementing, then `/architect:review`).
 
 ## Discipline
 

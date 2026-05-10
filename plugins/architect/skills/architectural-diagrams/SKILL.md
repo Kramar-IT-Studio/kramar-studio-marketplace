@@ -5,7 +5,7 @@ description: Use this skill whenever any structural or behavioral diagram of a s
 
 # architectural-diagrams
 
-The single source of truth for diagrams in `archforge`. Five diagram types, all rendered as Mermaid, each appropriate for a different question.
+The single source of truth for diagrams in `architect`. Five diagram types, all rendered as Mermaid, each appropriate for a different question.
 
 ## Pick the right type first
 

@@ -3,7 +3,7 @@ description: Generate an architectural diagram in Mermaid. Supports C4 (context/
 argument-hint: "<type> <subject>   types: c4-context|c4-container|c4-component|sequence|state|er|deployment"
 ---
 
-# /archforge:diagram
+# /architect:diagram
 
 Generate one architectural diagram. Single command, multiple types — the type is the first argument.
 
@@ -83,7 +83,7 @@ For component-level, sequence, state, ER — the diagram lives in `docs/architec
 - The Mermaid code block (so the user can render in chat).
 - The path it was saved to.
 - A note about what's inferred vs grounded — usually you've inferred from the repo, and the user will know things you don't (external systems, future containers, regulatory boundaries).
-- Suggestions for adjacent diagrams when relevant: "this container view doesn't show the deployment topology — try `/archforge:diagram deployment <subject>` for that."
+- Suggestions for adjacent diagrams when relevant: "this container view doesn't show the deployment topology — try `/architect:diagram deployment <subject>` for that."
 
 ## Discipline
 
@@ -96,7 +96,7 @@ For component-level, sequence, state, ER — the diagram lives in `docs/architec
 
 ## Backward compatibility
 
-The legacy `/archforge:c4 <level> <subject>` command still works. It is now an alias for `/archforge:diagram c4-<level> <subject>`. New work should use `/archforge:diagram` directly.
+The legacy `/architect:c4 <level> <subject>` command still works. It is now an alias for `/architect:diagram c4-<level> <subject>`. New work should use `/architect:diagram` directly.
 
 ## When to skip the file save
 

@@ -3,7 +3,7 @@ description: Phase 1 of the Architecture Cycle — gather constraints, forces, p
 argument-hint: "<problem statement>"
 ---
 
-# /archforge:discover
+# /architect:discover
 
 Phase 1 of the Architecture Cycle. The goal is to **make the problem space explicit** before any solution is sketched. No alternatives are proposed in this phase.
 
@@ -73,4 +73,4 @@ If round 2 produces material new constraints or push-backs, **do not auto-procee
 Tell the user:
 - Where the document was saved.
 - The 3–7 open questions, prioritized.
-- A suggestion (path A): "When you've answered these, I'll run a second-round pass and push back on anything that doesn't fit. Then run `/archforge:design \"<problem>\"` (or `/archforge:research` first if any answers depend on current info)."
+- A suggestion (path A): "When you've answered these, I'll run a second-round pass and push back on anything that doesn't fit. Then run `/architect:design \"<problem>\"` (or `/architect:research` first if any answers depend on current info)."

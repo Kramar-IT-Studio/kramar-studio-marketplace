@@ -1,17 +1,18 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
-  "name": "archforge",
-  "version": "0.4.0-rc3",
-  "description": "Architecture toolkit for Claude Code. A staff/principal-grade architect on tap, organized as a Discover → Design → Decide → Document → Review cycle. Includes a router skill, narrow specialist skills (C4, ADR, system design, code review, research, frontend, backend, AI agents), slash commands, sub-agents, and a project-level ARCHITECTURE.md template.",
+  "name": "architect",
+  "version": "1.0.0",
+  "description": "Architecture toolkit for Claude Code. A staff/principal-grade architect on tap, organized as a Discover → Design → Decide → Document → Review cycle. Includes a router skill (role), narrow specialist skills (C4, ADR, system design, code review, research, frontend, backend, AI agents), slash commands, sub-agents, and a project-level ARCHITECTURE.md template. Companion to the `product` plugin in the Kramar Studio Suite.",
   "keywords": [
     "architecture",
     "system-design",
     "adr",
     "c4",
     "code-review",
-    "compound-engineering"
+    "compound-engineering",
+    "kramar-studio"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/IgorKramar/archforge-marketplace",
-  "repository": "https://github.com/IgorKramar/archforge-marketplace"
+  "homepage": "https://github.com/Kramar-IT-Studio/kramar-studio-marketplace",
+  "repository": "https://github.com/Kramar-IT-Studio/kramar-studio-marketplace"
 }

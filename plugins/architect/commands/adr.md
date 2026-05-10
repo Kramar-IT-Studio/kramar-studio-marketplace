@@ -3,11 +3,11 @@ description: Shortcut — write an ADR directly. Use when the decision is alread
 argument-hint: "<one-line decision summary>"
 ---
 
-# /archforge:adr
+# /architect:adr
 
 Direct shortcut to writing an ADR. Use when you've already decided (in your head, in a meeting, in chat) and want to capture the decision now.
 
-For decisions you haven't made yet, use the full `/archforge:cycle` instead.
+For decisions you haven't made yet, use the full `/architect:cycle` instead.
 
 ## Inputs
 
@@ -16,7 +16,7 @@ For decisions you haven't made yet, use the full `/archforge:cycle` instead.
 
 ## Steps
 
-1. **Find the next ADR number** by listing `docs/architecture/decisions/`. If `docs/architecture/` doesn't exist, suggest running `/archforge:init` first.
+1. **Find the next ADR number** by listing `docs/architecture/decisions/`. If `docs/architecture/` doesn't exist, suggest running `/architect:init` first.
 
 2. **Use the `adr-writing` skill** to draft the ADR.
 

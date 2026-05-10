@@ -3,7 +3,7 @@ description: Adversarial multi-perspective review of an architectural artifact. 
 argument-hint: "<path-to-artifact OR ADR-NNNN> [--roles=all|core|<comma-list>]"
 ---
 
-# /archforge:roast
+# /architect:roast
 
 Multi-perspective adversarial review. Five specialized roles attack the same architectural artifact from different angles. Output is a structured aggregate that lets the architect see all attack surfaces at once.
 
@@ -14,13 +14,13 @@ This is **not** a code review. It runs against architectural documents — ADRs,
 - **Before promoting a proposed ADR to accepted.** A deep-cycle ADR should pass roast before declaring done.
 - **When the team is divided on a decision.** A roast surfaces what each side is responding to.
 - **On a substantial existing ADR that's about to drive significant work.** Catch problems before they ship.
-- **Auto-triggered** by `/archforge:cycle --scale=deep` after the Decide phase, before Document.
+- **Auto-triggered** by `/architect:cycle --scale=deep` after the Decide phase, before Document.
 
 ## When NOT to run
 
 - On a `light`-scale decision. The roast is heavyweight; don't apply it to a 30-line ADR.
 - On a draft you're still actively shaping. Roast at least once you have a coherent decision.
-- On code (use `/archforge:review` for code).
+- On code (use `/architect:review` for code).
 
 ## Inputs
 
@@ -160,13 +160,13 @@ Specifically, when the project's working language is Russian:
 - Section headers stay English (`## Headline findings`, not `## Главное`).
 - Role names in the summary stay English (`Devil-advocate`, `Pragmatist`, `Junior-engineer`, `Compliance-officer`, `Futurist`) — these are identifiers, not concepts to be translated.
 - Finding IDs stay in their Latin form (`B-1`, `H-3`, `J-2`, `C-1`, `F1.2`, `CC-3`).
-- The **content** under each section is written in Russian per the calque pass in `architect/SKILL.md`.
+- The **content** under each section is written in Russian per the calque pass in `role/SKILL.md`.
 
-If a previous roast translated section headers or role names (a known regression in v0.4.0-rc1 and earlier), that artifact diverged from the template. New roasts produce verbatim-English structure with translated prose. Use `/archforge:meta-review <roast-directory>` to verify a roast's structural integrity.
+If a previous roast translated section headers or role names (a known regression in v0.4.0-rc1 and earlier), that artifact diverged from the template. New roasts produce verbatim-English structure with translated prose. Use `/architect:meta-review <roast-directory>` to verify a roast's structural integrity.
 
 The summary author is responsible for this discipline at the summary level; each sub-agent is responsible for it in its own document.
 
-## Auto-roast in `/archforge:cycle --scale=deep`
+## Auto-roast in `/architect:cycle --scale=deep`
 
 When `cycle --scale=deep` reaches the end of Decide and before Document, automatically invoke roast on the decision summary. Pause for user to review. The user then decides:
 

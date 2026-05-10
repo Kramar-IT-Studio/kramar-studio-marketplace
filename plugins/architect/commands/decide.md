@@ -3,7 +3,7 @@ description: Phase 3 of the Architecture Cycle — pick one alternative with exp
 argument-hint: "<problem statement>"
 ---
 
-# /archforge:decide
+# /architect:decide
 
 Phase 3 of the Architecture Cycle. The goal is to **commit to one alternative** with reasoning that survives a year of hindsight.
 
@@ -13,7 +13,7 @@ Phase 3 of the Architecture Cycle. The goal is to **commit to one alternative** 
 - Design output: read the most recent design doc in `docs/architecture/research/` matching the problem.
 - Project context: `./ARCHITECTURE.md` and prior ADRs.
 
-If no design doc exists, run `/archforge:design` first. Don't decide on a vacuum.
+If no design doc exists, run `/architect:design` first. Don't decide on a vacuum.
 
 ## What to produce
 
@@ -48,4 +48,4 @@ A decision summary (this is **not yet the ADR** — that's phase 4):
 
 Show the decision summary inline. Save it to `docs/architecture/research/YYYY-MM-DD-<slug>-decision.md`.
 
-Suggest: "Run `/archforge:document \"<problem>\"` to write the ADR and update ARCHITECTURE.md."
+Suggest: "Run `/architect:document \"<problem>\"` to write the ADR and update ARCHITECTURE.md."

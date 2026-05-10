@@ -3,7 +3,7 @@ description: Phase 2 of the Architecture Cycle — generate 2–3 alternatives w
 argument-hint: "<problem statement>"
 ---
 
-# /archforge:design
+# /architect:design
 
 Phase 2 of the Architecture Cycle. The goal is to **propose alternatives, not pick one**. Decision is the next phase.
 
@@ -13,7 +13,7 @@ Phase 2 of the Architecture Cycle. The goal is to **propose alternatives, not pi
 - Discovery output: read the most recent file in `docs/architecture/research/` that matches the problem, if it exists.
 - Project context: `./ARCHITECTURE.md` and prior ADRs.
 
-If no discovery document exists, briefly walk the discovery questions inline before designing — but flag this and suggest running `/archforge:discover` first for non-trivial problems.
+If no discovery document exists, briefly walk the discovery questions inline before designing — but flag this and suggest running `/architect:discover` first for non-trivial problems.
 
 ## What to produce
 
@@ -57,4 +57,4 @@ Save to `docs/architecture/research/YYYY-MM-DD-<slug>-design.md`.
 
 ## Output to chat
 
-Summarize the alternatives and the comparison matrix. Tell the user where the doc is. Suggest: "When you're ready, run `/archforge:decide \"<problem>\"` to commit."
+Summarize the alternatives and the comparison matrix. Tell the user where the doc is. Suggest: "When you're ready, run `/architect:decide \"<problem>\"` to commit."

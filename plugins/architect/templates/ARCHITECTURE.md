@@ -101,7 +101,7 @@ ADR files live in [`docs/architecture/decisions/`](./docs/architecture/decisions
 
 <!--
 Architectural questions deferred to a future cycle. Each entry should be specific
-enough that someone could pick it up and run /archforge:cycle on it.
+enough that someone could pick it up and run /architect:cycle on it.
 -->
 
 - _e.g., How will we handle multi-tenant data isolation when we add a second customer?_

@@ -1,6 +1,42 @@
 # Changelog
 
-All notable changes to `archforge` are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+All notable changes to the `architect` plugin (formerly `archforge`) are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [1.0.0] — 2026-05-10 — Absorbed into `kramar-studio-marketplace`; renamed `archforge` → `architect`
+
+The plugin moved from `archforge-marketplace` (its own standalone marketplace) into `kramar-studio-marketplace` as a peer of `product`, and was renamed `archforge` → `architect` for consistency with the role-named suite (`product`, `ops`, `security`). The router skill was also renamed `architect:architect` → `architect:role` to avoid the collision and to establish a `<plugin>:role` pattern for future suite plugins. Strategic context and rationale: see [ADR-0001](https://github.com/Kramar-IT-Studio/kramar-studio-marketplace/blob/main/docs/architecture/decisions/0001-absorb-archforge-into-kramar-studio-marketplace.md) in the new marketplace.
+
+### Changed (BREAKING)
+
+- **Plugin name:** `archforge` → `architect`. All slash commands now use the `/architect:*` prefix (e.g., `/architect:cycle`, `/architect:adr`, `/architect:roast`, `/architect:review`).
+- **Router skill name:** the plugin's router skill was renamed `architect` → `role`. Skill identifier: `architect:role` (was `archforge:architect`).
+- **Marketplace home:** plugin moved from `archforge-marketplace` into `kramar-studio-marketplace` (Kramar Studio Suite). Old install path (`/plugin install archforge@archforge-marketplace`) no longer works.
+- **Marker file:** the project-version marker is now `.architect-version` (was `.archforge-version`). Existing projects with the old marker need manual rename or to re-run `/architect:init`.
+- **Skill directory:** `skills/architect/` → `skills/role/`. All internal cross-references updated.
+- **Sub-agent `architect`:** kept its name (`architect`) — it lives in `agents/architect.md` and is a separate identifier from the plugin name. Sub-agents are still invoked by sub-agent name; only the plugin name and router-skill name changed.
+- **Integration block markers:** the `<!-- archforge × compound-engineering integration -->` HTML markers in users' `AGENTS.md` are now written as `<!-- architect × compound-engineering integration -->`. Existing AGENTS.md integration blocks should be updated by re-running `/architect:remember-compound-integration`.
+
+### Migration from `0.4.0-rc3`
+
+```text
+/plugin marketplace remove archforge-marketplace                                  # optional
+/plugin marketplace add https://github.com/Kramar-IT-Studio/kramar-studio-marketplace
+/plugin install architect@kramar-studio-marketplace
+```
+
+In each project where `archforge` was previously initialized:
+
+1. Rename `.archforge-version` → `.architect-version` (or delete and re-run `/architect:init`).
+2. If `AGENTS.md` has the integration block, re-run `/architect:remember-compound-integration` to refresh the markers.
+3. References to `/archforge:*` in your own project files (READMEs, runbooks) — find/replace `/archforge:` → `/architect:`.
+
+ADR archive in `docs/architecture/decisions/` is unaffected; ADRs are user content with file conventions that this rename does not touch.
+
+### Why
+
+A worldview decision: `archforge-marketplace` and `kramar-studio-marketplace` had the same author, the same methodology, and the same audience. Maintaining them as two separate marketplaces created cross-marketplace dependency questions (how `product` artifacts cross-link to ADRs from the soused) and split documentation surface. Absorbing `archforge` into the studio marketplace makes the conceptual coherence (STRATEGY §2: «копируем у archforge мета-форму») structural rather than documentary. Plugin/skill rename to `architect`/`role` aligns naming with the role-named peers in the suite (`product`, `ops`, `security`).
+
+---
 
 ## [0.4.0-rc3] - Renamed from `krait_arch` to `archforge`
 

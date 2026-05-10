@@ -1,6 +1,6 @@
 ---
 name: adr-writing
-description: Use this skill whenever an architectural decision is being made, captured, or revised — when the user says "write an ADR", "let's document this decision", "we decided to use X", "deprecate decision Y", or when the conversation has just produced a non-trivial choice (database, framework, protocol, structural pattern) that should be persisted. Also use proactively after the `/archforge:decide` phase. Outputs an ADR file in `docs/architecture/decisions/` using the project's template, with proper numbering and an updated index.
+description: Use this skill whenever an architectural decision is being made, captured, or revised — when the user says "write an ADR", "let's document this decision", "we decided to use X", "deprecate decision Y", or when the conversation has just produced a non-trivial choice (database, framework, protocol, structural pattern) that should be persisted. Also use proactively after the `/architect:decide` phase. Outputs an ADR file in `docs/architecture/decisions/` using the project's template, with proper numbering and an updated index.
 ---
 
 # ADR writing
@@ -33,7 +33,7 @@ docs/architecture/decisions/
 └── README.md            ← index of ADRs (auto-maintained)
 ```
 
-Naming: `NNNN-imperative-decision-summary.md`. Zero-padded numbers, kebab-case. The number is allocated sequentially by the `architect` skill or the `/archforge:document` command.
+Naming: `NNNN-imperative-decision-summary.md`. Zero-padded numbers, kebab-case. The number is allocated sequentially by the `architect` skill or the `/architect:document` command.
 
 ## Templates
 
@@ -225,7 +225,7 @@ Harder:
 
 ## Process integration
 
-When called via `/archforge:document` or `/archforge:adr`:
+When called via `/architect:document` or `/architect:adr`:
 
 1. Find the next available ADR number by listing `docs/architecture/decisions/`.
 2. Use the project's template (or Nygard default).
