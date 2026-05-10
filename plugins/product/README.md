@@ -1,6 +1,6 @@
 # product
 
-Product management toolkit for Claude Code. Per-feature cycle Discover → Define → Spec → Validate, plus rare market-scan (quarterly anchor for an area) and prioritize (operation over the backlog). Artifacts are versioned, cross-link to ADRs from `archforge`, and the cycle is enforced by soft, non-blocking hooks.
+Product management toolkit for Claude Code. Per-feature cycle Discover → Define → Spec → Validate, plus rare market-scan (quarterly anchor for an area) and prioritize (operation over the backlog). Artifacts are versioned, cross-link to ADRs from `architect`, and the cycle is enforced by soft, non-blocking hooks.
 
 > **Philosophy.** Product work is a *cycle of bets and verdicts*, not a stream of features. This plugin makes the cycle first-class and the trail durable: every feature has a hypothesis, a measurable success metric, and an honest verdict at the end.
 
@@ -76,7 +76,7 @@ See [`skills/product-cycle/SKILL.md`](./skills/product-cycle/SKILL.md) for the f
 Two skills per the [Kramar Studio Plugin Conventions](../../README.md#kramar-studio-plugin-conventions):
 
 - **[`product-conventions`](./skills/product-conventions/SKILL.md)** — artifact format contract: front-matter, ID prefixes, status lifecycle, file layout, cross-references.
-- **[`product-cycle`](./skills/product-cycle/SKILL.md)** — methodology: phase definitions, when to skip, common failure modes, how to interleave with `archforge`.
+- **[`product-cycle`](./skills/product-cycle/SKILL.md)** — methodology: phase definitions, when to skip, common failure modes, how to interleave with `architect`.
 
 Commands read these skills as needed. Adding more skills is intentional minimalism — see the conventions doc.
 
@@ -91,7 +91,7 @@ Non-blocking. They never abort, never edit files, never auto-commit. They surfac
   - PRD: linked SCAN exists and is fresh (≤90 days); warn if missing.
   - SPEC: ≥3 acceptance criteria.
 
-The hook script lives at [`scripts/check-product-artifact.sh`](./scripts/check-product-artifact.sh) and follows the soft-warning posture from `archforge`.
+The hook script lives at [`scripts/check-product-artifact.sh`](./scripts/check-product-artifact.sh) and follows the soft-warning posture from `architect`.
 
 ### Templates
 
@@ -106,10 +106,10 @@ In [`templates/`](./templates/):
 
 ## How `PRODUCT.md` works
 
-By analogy with `archforge`'s `ARCHITECTURE.md`, the project gets a living root document:
+By analogy with `architect`'s `ARCHITECTURE.md`, the project gets a living root document:
 
 - **`CLAUDE.md`** — codebase context, conventions. *What* the code looks like.
-- **`ARCHITECTURE.md`** (from `archforge`) — architectural state. *Why* the code looks like that.
+- **`ARCHITECTURE.md`** (from `architect`) — architectural state. *Why* the code looks like that.
 - **`PRODUCT.md`** (this plugin) — product state. *Who is this for, and what bets are we making?*
 
 `PRODUCT.md` is the spine. It contains:
@@ -133,7 +133,7 @@ After `/product:init`:
 ```
 your-project/
 ├── PRODUCT.md                          ← root product document
-├── ARCHITECTURE.md                     ← (from archforge, if installed)
+├── ARCHITECTURE.md                     ← (from architect, if installed)
 ├── CLAUDE.md                           ← (your existing project memory)
 ├── .product-version                    ← plugin version marker
 └── docs/
@@ -154,17 +154,17 @@ your-project/
 
 ---
 
-## Integration with `archforge`
+## Integration with `architect`
 
 Most non-trivial product work touches architecture. The cycles meet, but stay distinct.
 
 ### When a PRD requires architecture work
 
-A PRD that introduces a new service, schema, external dependency, or protocol triggers `/archforge:cycle`. The flow:
+A PRD that introduces a new service, schema, external dependency, or protocol triggers `/architect:cycle`. The flow:
 
 1. Draft PRD up to the point where you need an architectural decision.
 2. Surface the dependency: "this PRD requires ADR-NNNN to exist or be revisited".
-3. Run `/archforge:cycle "<scope>"` — produces ADR-NNNN.
+3. Run `/architect:cycle "<scope>"` — produces ADR-NNNN.
 4. Continue with `/product:spec`. The SPEC's `links_to` includes the ADR.
 
 ### When an ADR is justified by a product hypothesis
@@ -173,7 +173,7 @@ An ADR may be predicated on a HYP being true (e.g. "we picked Postgres because w
 
 1. The ADR's `links_to` references the HYP.
 2. When the corresponding VAL lands, the validation reinforces or weakens the ADR's justification.
-3. A refuted VAL is a signal to run `/archforge:observe` to revisit affected ADRs.
+3. A refuted VAL is a signal to run `/architect:observe` to revisit affected ADRs.
 
 ### Cross-references in artifacts
 
@@ -199,7 +199,7 @@ The cycle exists to surface weak hypotheses, missing metrics, vague segments, di
 - Pushes back when a discovery's segment is "all our users".
 - Surfaces when an in-flight feature short-circuits the cycle.
 
-Soft, agreeable product advice is the most expensive kind — it sounds helpful and quietly costs months of work on launches no one asked for. See `archforge`'s posture as the reference; this plugin inherits it.
+Soft, agreeable product advice is the most expensive kind — it sounds helpful and quietly costs months of work on launches no one asked for. See `architect`'s posture as the reference; this plugin inherits it.
 
 ---
 

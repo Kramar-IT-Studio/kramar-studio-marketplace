@@ -37,7 +37,7 @@ Status transitions are documented in `product-conventions/SKILL.md`.
 ## Cross-references
 
 Product artifacts cross-link to architectural decisions in
-`docs/architecture/decisions/` (from the `archforge` plugin) via the
+`docs/architecture/decisions/` (from the `architect` plugin) via the
 `links_to` field in front-matter. The graph is what makes the marketplace
 compound.
 

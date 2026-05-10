@@ -74,7 +74,7 @@ Update the source HYP's status: `draft` → `active` (a HYP becomes active when 
 - **Counter-metric must be different from the primary.** "Engagement up, latency not worse" is valid. "Engagement up, engagement not down" is the same metric and doesn't catch regressions.
 - **No solution proposals beyond user-visible behavior.** Don't pick libraries, don't draw schemas. The SPEC phase does that.
 - **If the discovery's hypothesis was vague, the PRD will inherit the vagueness.** Push back: "HYP-NNNN's hypothesis is unmeasurable; refine it before continuing." Don't paper over.
-- **If the feature requires a new architectural decision** (new external service, new schema, new protocol), surface it: "this PRD requires ADR work — run `/archforge:cycle` first or in parallel." Don't pretend the architecture is free.
+- **If the feature requires a new architectural decision** (new external service, new schema, new protocol), surface it: "this PRD requires ADR work — run `/architect:cycle` first or in parallel." Don't pretend the architecture is free.
 
 ## Worked examples
 
@@ -154,7 +154,7 @@ The push-back move: refuse to save. Tell the user one of two things:
 - **User stories as features.** "As a user, I want a notification system." That's not a story, that's a feature name with a comma in it. A real story names the *role*, the *action*, and the *outcome the user gets*. If the outcome is missing, the story isn't a story — it's a wishlist item.
 - **>7 user stories.** If you have 12, the feature is two features. Split. Forcing one PRD to cover both produces a SPEC that everyone reads as "everything in scope" and a launch that's late on both halves.
 - **Risks without detection.** "Risk: it might not work." Without a way to *notice* the risk materializing, it's not a risk you've planned for, it's a worry you've voiced. Each risk needs detection (specific signal, specific threshold) and mitigation (specific action).
-- **No `links_to` despite obvious architectural dependencies.** Body says "we'll need a queue" → `links_to` is empty → ADR doesn't exist. Either run `/archforge:cycle` first (or in parallel), or write the dependency in `links_to` as `ADR-TBD-<topic>` and surface it as a blocker. Don't pretend the architecture is free.
+- **No `links_to` despite obvious architectural dependencies.** Body says "we'll need a queue" → `links_to` is empty → ADR doesn't exist. Either run `/architect:cycle` first (or in parallel), or write the dependency in `links_to` as `ADR-TBD-<topic>` and surface it as a blocker. Don't pretend the architecture is free.
 - **Counter-metric == primary metric, in disguise.** "Engagement up; bounce rate not up" — if engagement and bounce are derived from the same denominator, they're the same metric. Pick a counter-metric on a *different axis* (cost, latency, support volume, retention).
 
 ## After the PRD

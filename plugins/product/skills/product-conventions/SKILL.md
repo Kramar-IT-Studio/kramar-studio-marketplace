@@ -1,6 +1,6 @@
 ---
 name: product-conventions
-description: Activate this skill whenever a product artifact is being created, edited, or audited — PRD, hypothesis, market-scan, spec, validation. The skill carries the rules for artifact identity (front-matter, ID prefixes, status lifecycle), file layout under docs/product/, and how product artifacts cross-link to archforge ADRs. Use proactively when the user says "write a PRD", "let's spec this", "what's the format for X", or whenever a product command (e.g. /product:define) is producing output and the format must match.
+description: Activate this skill whenever a product artifact is being created, edited, or audited — PRD, hypothesis, market-scan, spec, validation. The skill carries the rules for artifact identity (front-matter, ID prefixes, status lifecycle), file layout under docs/product/, and how product artifacts cross-link to architect ADRs. Use proactively when the user says "write a PRD", "let's spec this", "what's the format for X", or whenever a product command (e.g. /product:define) is producing output and the format must match.
 ---
 
 # product-conventions
@@ -29,7 +29,7 @@ docs/product/
 └── .last-market-scan         ← marker file
 ```
 
-`PRODUCT.md` lives at the **repository root**, alongside `ARCHITECTURE.md` (if `archforge` is in use) and `CLAUDE.md`. Same level — these are project memory documents, not artifacts.
+`PRODUCT.md` lives at the **repository root**, alongside `ARCHITECTURE.md` (if `architect` is in use) and `CLAUDE.md`. Same level — these are project memory documents, not artifacts.
 
 ## Artifact identity: the front-matter contract
 
@@ -103,7 +103,7 @@ draft ──► active ──► accepted
 | `SPEC-NNNN` | The source `PRD-NNNN`, always; plus all `ADR-NNNN` the spec relies on |
 | `VAL-NNNN` | The source `PRD-NNNN` and `HYP-NNNN`; plus any `ADR-NNNN` whose justification depended on the validation |
 
-### Cross-reference to archforge
+### Cross-reference to architect
 
 Product artifacts routinely reference `ADR-NNNN` from `docs/architecture/decisions/`. The reference uses the bare ID (`ADR-0007`) — the resolver finds the file in `docs/architecture/decisions/0007-*.md`.
 
@@ -120,7 +120,7 @@ Product artifacts routinely reference `ADR-NNNN` from `docs/architecture/decisio
 - Plugin source (commands, skills, templates) is in **English**. This file is in English.
 - **Generated artifacts follow the user's language.** If the user works in Russian, all PRDs / SCANs / SPECs / VALs are in Russian.
 - **Identifiers stay verbatim across languages.** `HYP-0003` is `HYP-0003` in any language. Section headers prescribed by the templates (`## Success metric`, `## Acceptance criteria`, `## Verdict`) stay verbatim — translating them desyncs the artifact from what `/product:status` and the hooks expect to find.
-- For the full taxonomy of what gets translated and what stays English, see `archforge`'s `architect/SKILL.md` Language and Terminology section. This plugin inherits that posture.
+- For the full taxonomy of what gets translated and what stays English, see `architect`'s `role/SKILL.md` Language and Terminology section. This plugin inherits that posture.
 
 ## Common malformations to refuse
 
@@ -131,7 +131,7 @@ If you catch yourself producing one of these, rewrite:
 - **SPEC with <3 acceptance criteria.** You're hand-waving, not specifying.
 - **Market-scan with empty Gaps section.** Either you didn't try hard enough, or the area isn't worth entering — say which.
 - **Validation that pads "inconclusive" to look like "confirmed".** The whole point of having the metric was to be honest now.
-- **Front-matter `links_to: []` on an artifact whose body references architecture.** If you wrote about Postgres, queues, schemas — there should be an `ADR-` link or an explicit note that no ADR yet covers it (which itself is an open question for `/archforge:cycle`).
+- **Front-matter `links_to: []` on an artifact whose body references architecture.** If you wrote about Postgres, queues, schemas — there should be an `ADR-` link or an explicit note that no ADR yet covers it (which itself is an open question for `/architect:cycle`).
 
 ## When this skill applies
 
@@ -143,4 +143,4 @@ If you catch yourself producing one of these, rewrite:
 ## When this skill does **not** apply
 
 - Methodology questions ("should I run discover or skip to define?") — that's `product-cycle`.
-- Architecture questions ("what's the right service boundary?") — that's `archforge`.
+- Architecture questions ("what's the right service boundary?") — that's `architect`.

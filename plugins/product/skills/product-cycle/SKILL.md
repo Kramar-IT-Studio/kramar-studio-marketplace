@@ -1,6 +1,6 @@
 ---
 name: product-cycle
-description: Activate this skill whenever the user is doing product work — defining a feature, writing a PRD, validating a launch, scanning a market, prioritizing a backlog. The skill carries the methodology: what each phase produces, when to skip a phase, when to abort, how the per-feature cycle relates to market-scan and prioritize (which are NOT in the cycle), and how product work interleaves with archforge architecture work. Use proactively when the user discusses product strategy, feature definition, launch metrics, user discovery, or asks "what's next" / "should we build this" — even without a /product slash command.
+description: Activate this skill whenever the user is doing product work — defining a feature, writing a PRD, validating a launch, scanning a market, prioritizing a backlog. The skill carries the methodology: what each phase produces, when to skip a phase, when to abort, how the per-feature cycle relates to market-scan and prioritize (which are NOT in the cycle), and how product work interleaves with architect architecture work. Use proactively when the user discusses product strategy, feature definition, launch metrics, user discovery, or asks "what's next" / "should we build this" — even without a /product slash command.
 ---
 
 # product-cycle
@@ -116,15 +116,15 @@ Symptom: every candidate scored at high-confidence; no validation has run in mon
 
 Fix: cap confidence column. Without recent validations, the confidence number is a fiction — surface that explicitly.
 
-## Interleaving with `archforge`
+## Interleaving with `architect`
 
 Most non-trivial features touch architecture. The cycles are different but they meet:
 
-- **A PRD that requires a new service, schema, or external dependency** triggers a parallel `/archforge:cycle`. The PRD blocks on the ADR; the SPEC links to the resulting `ADR-NNNN`. Don't pretend the architecture is free.
+- **A PRD that requires a new service, schema, or external dependency** triggers a parallel `/architect:cycle`. The PRD blocks on the ADR; the SPEC links to the resulting `ADR-NNNN`. Don't pretend the architecture is free.
 
 - **An ADR justified by a product hypothesis** (e.g. "we picked Postgres because we believe transactional consistency matters for use case X") should `links_to` the `HYP-NNNN`. When that hypothesis is later validated or refuted, the ADR's justification is reinforced or weakened — and that's worth tracking.
 
-- **Validation that refutes the hypothesis** the architecture was built on is a signal to revisit the ADR. Run `/archforge:observe` after a refuted validation.
+- **Validation that refutes the hypothesis** the architecture was built on is a signal to revisit the ADR. Run `/architect:observe` after a refuted validation.
 
 ## When the cycle does **not** apply
 
@@ -167,7 +167,7 @@ The define phase produces the PRD. The load-bearing call is the **success metric
 | Window | 4 weeks post-launch |
 | Counter | WAU among the same cohort, must not drop >2% |
 
-The PRD also surfaces the **architectural dependency**: the soft-delete window. We can't safely promise undo if the backend GCs deletes immediately. This triggers a parallel `/archforge:cycle` → `ADR-0011` (10-second server-side soft-delete window). The PRD's `links_to` carries `[HYP-0007, SCAN-0002, ADR-0011]`.
+The PRD also surfaces the **architectural dependency**: the soft-delete window. We can't safely promise undo if the backend GCs deletes immediately. This triggers a parallel `/architect:cycle` → `ADR-0011` (10-second server-side soft-delete window). The PRD's `links_to` carries `[HYP-0007, SCAN-0002, ADR-0011]`.
 
 **What would have broken without define.** Skipping straight from HYP to SPEC would have left the success metric unstated. The team would have built the toast, eyeballed the ticket trend, and declared victory. With no baseline, no target, no counter-metric, the validation later would have nothing to compare against.
 
@@ -205,7 +205,7 @@ The other failure mode — *protecting the launch* by marking +0.5pp as "directi
 ### What the example shows in aggregate
 
 - **Each phase pays the next.** Discovery's anti-hypothesis informed what to instrument; PRD's metric defined what the SPEC analytics had to cover; SPEC's `time_to_undo_ms` event made the validation's keyboard-undo insight visible. Skip one and the chain breaks downstream.
-- **Cross-role linkage is structural.** ADR-0011 wasn't decorative — without the 10s server-side window, the 5s client toast couldn't make a safe promise. The PRD surfaced the dependency; `archforge` produced the decision; SPEC and VAL referenced it.
+- **Cross-role linkage is structural.** ADR-0011 wasn't decorative — without the 10s server-side window, the 5s client toast couldn't make a safe promise. The PRD surfaced the dependency; `architect` produced the decision; SPEC and VAL referenced it.
 - **The verdict is the start of the next cycle, not the end.** Confirmed VAL → backlog re-shuffles (bulk-delete-undo gains confidence), new HYP spawned (keyboard-undo binding). The VAL is feedback into prioritize, not a closing ceremony.
 
 If a real cycle in your project doesn't produce this kind of trail, the cycle isn't doing the work. Look for which phase got skipped or gestured at, and put the missing artifact in.
@@ -225,4 +225,4 @@ Before sending a phase artifact, mentally verify:
 - [ ] Cross-references to prior phases (`links_to`) are filled.
 - [ ] If architecture is implied, an ADR is named or an open question is logged.
 - [ ] No solution-leakage in problem-space artifacts (HYP); no problem-leakage in solution-space artifacts (SPEC).
-- [ ] Language pass applied per `archforge`'s Language section if the artifact is in Russian.
+- [ ] Language pass applied per `architect`'s Language section if the artifact is in Russian.

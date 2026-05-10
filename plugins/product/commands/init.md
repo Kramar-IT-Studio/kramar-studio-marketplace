@@ -34,7 +34,7 @@ You are bootstrapping this project for product work. This is the first command a
 
 4. **Detect the product context** by inspecting the repository (briefly — don't go deep):
    - Read `README.md` and any `STRATEGY.md` for product-context hints.
-   - Read `ARCHITECTURE.md` if it exists (means `archforge` is in use — we will cross-link).
+   - Read `ARCHITECTURE.md` if it exists (means `architect` is in use — we will cross-link).
    - Look at `package.json` / `pyproject.toml` for stack hints.
 
 5. **Pre-fill the `PRODUCT.md` template** based on what you observe:
@@ -50,7 +50,7 @@ You are bootstrapping this project for product work. This is the first command a
 7. **Tell the user**:
    - That `PRODUCT.md`, `docs/product/`, and `.product-version` were created.
    - The 3–5 open questions you put in.
-   - **If `ARCHITECTURE.md` exists** (archforge in use): mention that `links_to` in product artifacts will reference ADRs from `docs/architecture/decisions/`.
+   - **If `ARCHITECTURE.md` exists** (architect in use): mention that `links_to` in product artifacts will reference ADRs from `docs/architecture/decisions/`.
    - Suggest `/product:market-scan "<area>"` if the project has no clear product area yet, or `/product:discover "<feature>"` if the user has a specific feature in mind.
 
 8. **Do not commit.** Leave that to the user.

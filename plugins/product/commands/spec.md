@@ -40,7 +40,7 @@ A spec covering:
 
 6. **Analytics / observability** — what we instrument to actually measure the success metric. Event names, properties, where they fire. **A spec where the success metric isn't measurable is broken.**
 
-7. **Open questions for engineering** — implementation choices the spec doesn't pin down because they're judgment calls (library, exact data type, etc.). These are *not* product questions; they're for the engineer (or the architect via `/archforge:cycle`).
+7. **Open questions for engineering** — implementation choices the spec doesn't pin down because they're judgment calls (library, exact data type, etc.). These are *not* product questions; they're for the engineer (or the architect via `/architect:cycle`).
 
 8. **Cross-references** — `links_to`:
    - Source PRD-NNNN.
@@ -74,7 +74,7 @@ Update the source PRD's status: `draft` → `active` when its SPEC enters draft.
 - **At least 3 acceptance criteria.** Below this, you're not specifying — you're hand-waving. The hook flags this.
 - **Out-of-scope must be explicit.** "We won't handle network partitions in v1" is a valid line. Silently not handling them is a bug.
 - **Analytics is part of the spec.** If you skip section 6, the success metric in the PRD is unmeasurable, which means the PRD was broken too.
-- **If the spec contradicts an existing ADR, stop.** Surface the conflict: "this spec implies a deviation from ADR-NNNN. Resolve via `/archforge:cycle` (new ADR superseding the old) before continuing." Do not silently override architecture from product side.
+- **If the spec contradicts an existing ADR, stop.** Surface the conflict: "this spec implies a deviation from ADR-NNNN. Resolve via `/architect:cycle` (new ADR superseding the old) before continuing." Do not silently override architecture from product side.
 
 ## Review pass
 
