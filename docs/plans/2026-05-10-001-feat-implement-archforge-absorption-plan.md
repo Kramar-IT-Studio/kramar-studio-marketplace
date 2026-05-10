@@ -1,8 +1,9 @@
 ---
 title: "feat: Absorb archforge plugin into kramar-studio-marketplace as `architect`"
 type: feat
-status: active
+status: completed
 date: 2026-05-10
+completed_at: 2026-05-10
 origin: docs/architecture/decisions/0001-absorb-archforge-into-kramar-studio-marketplace.md
 ---
 
