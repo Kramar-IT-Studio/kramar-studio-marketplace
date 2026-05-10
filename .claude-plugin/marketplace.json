@@ -10,13 +10,28 @@
     {
       "name": "product",
       "source": "./plugins/product",
-      "description": "Product management toolkit: market-scan (rare) + per-feature cycle Discover → Define → Spec → Validate, with prioritize over backlog. Artifacts (HYP/PRD/SPEC/VAL/SCAN) cross-link to ADRs from archforge.",
+      "description": "Product management toolkit: market-scan (rare) + per-feature cycle Discover → Define → Spec → Validate, with prioritize over backlog. Artifacts (HYP/PRD/SPEC/VAL/SCAN) cross-link to ADRs from the `architect` plugin.",
       "category": "development",
       "keywords": [
         "product-management",
         "prd",
         "discovery",
         "market-scan",
+        "compound-engineering",
+        "kramar-studio"
+      ]
+    },
+    {
+      "name": "architect",
+      "source": "./plugins/architect",
+      "description": "Architecture toolkit: Discover → Design → Decide → Document → Review cycle, with skills for C4, ADR, system design, code review, and research. Router skill is `architect:role`. Absorbed from archforge-marketplace per ADR-0001.",
+      "category": "development",
+      "keywords": [
+        "architecture",
+        "system-design",
+        "adr",
+        "c4",
+        "code-review",
         "compound-engineering",
         "kramar-studio"
       ]
