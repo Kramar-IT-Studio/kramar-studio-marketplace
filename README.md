@@ -1,16 +1,17 @@
 # Kramar Studio Marketplace
 
-Claude Code [plugin marketplace](https://docs.claude.com/en/docs/claude-code/plugin-marketplaces) hosting role-specific plugins for **Kramar IT Studio**: a structured way to run product, ops, and security work as repeatable cycles with durable artifacts.
+Claude Code [plugin marketplace](https://docs.claude.com/en/docs/claude-code/plugin-marketplaces) hosting role-specific plugins for **Kramar IT Studio**: a structured way to run architecture, product, ops, and security work as repeatable cycles with durable artifacts.
 
-> **Companion to [`archforge-marketplace`](https://github.com/IgorKramar/archforge-marketplace).** `archforge` is the architecture role and the **reference implementation** of the methodology — discover → decide → review → evolve, with versioned artifacts and migrations. The plugins here apply the same shape to other roles.
+> **Single Kramar Studio Suite.** As of [ADR-0001](./docs/architecture/decisions/0001-absorb-archforge-into-kramar-studio-marketplace.md), the `architect` plugin (architecture role; previously `archforge` in its own `archforge-marketplace`) lives here as a peer of `product`. The original `archforge-marketplace` repo is now a redirect-stub. All role-plugins share one mета-форма (cycle, frontmatter with lifecycle, cross-link via `links_to`, soft hooks, service commands) and evolve in sync under one maintainer.
 
 ## What's inside
 
 | Plugin | Status | Purpose |
 |---|---|---|
-| **`product`** | scaffolded (v0.1) | Market-scan (quarterly anchor) + per-feature cycle Discover → Define → Spec → Validate, plus `prioritize` over a backlog. Artifacts: HYP/PRD/SPEC/VAL/SCAN, cross-linked to ADRs from `archforge`. |
-| **`ops`** | planned | Operations role — runbook authoring, on-call posture, incident retrospectives. |
-| **`security`** | planned | Security role — threat modeling, security review, dependency posture. |
+| **`architect`** | active (v1.0) | Architecture role — Discover → Design → Decide → Document → Review cycle. Skills for C4, ADR, system design, frontend/backend/AI-agents architecture, code review, research. Router skill `architect:role`. |
+| **`product`** | scaffolded (v0.1) | Market-scan (quarterly anchor) + per-feature cycle Discover → Define → Spec → Validate, plus `prioritize` over a backlog. Artifacts: HYP/PRD/SPEC/VAL/SCAN, cross-linked to ADRs from `architect`. |
+| **`ops`** | planned (v0.3) | Operations role — runbook authoring, on-call posture, incident retrospectives. |
+| **`security`** | planned (v0.4) | Security role — threat modeling, security review, dependency posture. |
 
 > **Out of scope on purpose:** frontend, design, qa, pm, tech writer. The studio runs solo today; only the roles I actually wear get a plugin.
 
@@ -19,43 +20,65 @@ Claude Code [plugin marketplace](https://docs.claude.com/en/docs/claude-code/plu
 From inside Claude Code:
 
 ```text
-/plugin marketplace add https://github.com/kramar-it-studio/kramar-studio-marketplace
+/plugin marketplace add https://github.com/Kramar-IT-Studio/kramar-studio-marketplace
+/plugin install architect@kramar-studio-marketplace
 /plugin install product@kramar-studio-marketplace
 ```
+
+Plugins install independently — you can take just `architect`, just `product`, or both (recommended for the full suite).
 
 For local development:
 
 ```text
 /plugin marketplace add /absolute/path/to/kramar-studio-marketplace
+/plugin install architect@kramar-studio-marketplace
 /plugin install product@kramar-studio-marketplace
 ```
 
 After install, run `/reload-plugins` (or restart Claude Code) and verify with `/plugin list`.
 
-## Quick start with `product`
+### Migrating from `archforge-marketplace`
+
+If you previously installed `archforge` from the old marketplace:
 
 ```text
-/product:init                              # bootstrap docs/product/ skeleton
+/plugin marketplace remove archforge-marketplace        # optional cleanup
+/plugin marketplace add https://github.com/Kramar-IT-Studio/kramar-studio-marketplace
+/plugin install architect@kramar-studio-marketplace
+```
+
+All `/archforge:*` commands are now `/architect:*`. The router skill identifier changed from `archforge:architect` to `architect:role`. The version marker file is now `.architect-version` (was `.archforge-version`). See the plugin's [CHANGELOG](./plugins/architect/CHANGELOG.md) for the full breaking-change list.
+
+## Quick start
+
+```text
+# Architecture cycle
+/architect:init                            # bootstrap ARCHITECTURE.md and docs/architecture/
+/architect:cycle "<problem>"               # full cycle: Discover → Design → Decide → Document
+/architect:adr "<decision>"                # shortcut: write ADR directly
+/architect:review [path]                   # architectural code review
+
+# Product cycle
+/product:init                              # bootstrap PRODUCT.md and docs/product/
 /product:market-scan "<area>"              # rare — quarterly or new area
 /product:discover "<feature>"              # per-feature cycle, phase 1
 /product:define "<feature>"                # phase 2 — PRD with success metric
 /product:spec "<feature>"                  # phase 3 — implementation spec
 /product:validate "<feature>"              # phase 4 — post-launch validation
-/product:prioritize                        # backlog operation, runs over candidates
 /product:status                            # what's in flight, what's stale
 ```
 
-See [`plugins/product/README.md`](./plugins/product/README.md) for the full reference.
+See [`plugins/architect/README.md`](./plugins/architect/README.md) and [`plugins/product/README.md`](./plugins/product/README.md) for full references.
 
 ---
 
 ## Kramar Studio Plugin Conventions
 
-These conventions apply to **every plugin in this marketplace** and to `archforge` as the reference implementation. New role plugins (ops, security, …) inherit these rules verbatim. Treat this section as the marketplace's spec — if a plugin diverges, it's a bug in the plugin, not a precedent.
+These conventions apply to **every plugin in this marketplace** and to `architect` as the reference implementation. New role plugins (ops, security, …) inherit these rules verbatim. Treat this section as the marketplace's spec — if a plugin diverges, it's a bug in the plugin, not a precedent.
 
 ### 1. One plugin per role
 
-Each plugin owns exactly one role of the studio. The plugin name is the role name in lowercase: `archforge` (architecture), `product`, `ops`, `security`.
+Each plugin owns exactly one role of the studio. The plugin name is the role name in lowercase: `architect` (architecture), `product`, `ops`, `security`.
 
 A role-plugin is responsible for:
 
@@ -88,7 +111,7 @@ docs/<role>/
 └── .last-<command>           ← marker files for hooks (e.g. .last-observe, .last-market-scan)
 ```
 
-`archforge` uses `decisions/`, `diagrams/`, `research/`, `reviews/`. `product` uses `discoveries/`, `prds/`, `specs/`, `validations/`, `research/` (for market-scans), plus `backlog.md`. `ops` and `security` will define their own when scaffolded — but always under `docs/<role>/`.
+`architect` uses `decisions/`, `diagrams/`, `research/`, `reviews/`. `product` uses `discoveries/`, `prds/`, `specs/`, `validations/`, `research/` (for market-scans), plus `backlog.md`. `ops` and `security` will define their own when scaffolded — but always under `docs/<role>/`.
 
 ### 4. Front-matter on every artifact
 
@@ -99,7 +122,7 @@ Every artifact starts with YAML front-matter:
 id: <ROLE_PREFIX>-NNNN          # ADR-0001, HYP-0001, PRD-0001, SPEC-0001, VAL-0001, SCAN-0001
 status: draft | active | accepted | superseded | archived
 created_at: YYYY-MM-DD
-role: <role>                    # archforge | product | ops | security
+role: <role>                    # architect | product | ops | security
 links_to:                       # optional, but expected for cross-role artifacts
   - ADR-0007
   - HYP-0003
@@ -110,7 +133,7 @@ links_to:                       # optional, but expected for cross-role artifact
 
 | Role | Prefix | Artifact |
 |---|---|---|
-| `archforge` | `ADR-` | Architecture Decision Record |
+| `architect` | `ADR-` | Architecture Decision Record |
 | `product` | `SCAN-` | Market scan |
 | `product` | `HYP-` | Discovery hypothesis |
 | `product` | `PRD-` | Product Requirements Document |
@@ -129,7 +152,7 @@ Every role has a finite, opinionated cycle. The cycle is encoded in slash comman
 
 Examples:
 
-- `archforge`: `discover → design → decide → document → review`.
+- `architect`: `discover → design → decide → document → review`.
 - `product`: `discover → define → spec → validate` (per-feature) + `market-scan` and `prioritize` outside the per-feature loop.
 
 The cycle structure is **part of the plugin's contract** — a fork that adds or removes phases is a different plugin, not a customization.
@@ -159,7 +182,7 @@ Skills in this marketplace are **not** 1:1 with commands. Each plugin ships exac
 
 Commands read these skills as needed. Adding more skills is allowed only when a clearly distinct body of knowledge emerges (e.g. `architect` plugin has `c4-diagrams`, `adr-writing`, etc. because those are external standards with their own depth). Don't add a skill just to mirror a command.
 
-### 9. Cross-references to `archforge` are first-class
+### 9. Cross-references to `architect` are first-class
 
 Product, ops, and security plugins routinely produce artifacts that depend on architectural decisions:
 
@@ -171,11 +194,11 @@ The `links_to` field carries these. Hooks in non-architecture plugins **do not**
 
 ### 10. Language
 
-Plugin source (commands, skills, templates) is in English — universal, copy-pasteable. Generated artifacts follow the user's language. If the user works in Russian, all PRDs, ADRs, market-scans are in Russian, but identifiers (IDs, command names, section headers from templates) stay verbatim. See `archforge`'s `architect/SKILL.md` for the full taxonomy — it's the reference all role plugins inherit.
+Plugin source (commands, skills, templates) is in English — universal, copy-pasteable. Generated artifacts follow the user's language. If the user works in Russian, all PRDs, ADRs, market-scans are in Russian, but identifiers (IDs, command names, section headers from templates) stay verbatim. See `architect`'s `role/SKILL.md` for the full taxonomy — it's the reference all role plugins inherit.
 
 ### 11. Tone
 
-Plugins in this marketplace push back. They don't soft-cave when the user proposes a weak product cut, a leaky abstraction, a half-baked launch. The cycle exists to surface those — collapsing at the first pushback wastes the cycle. See archforge's posture as the reference.
+Plugins in this marketplace push back. They don't soft-cave when the user proposes a weak product cut, a leaky abstraction, a half-baked launch. The cycle exists to surface those — collapsing at the first pushback wastes the cycle. See architect's posture as the reference.
 
 ---
 
@@ -202,7 +225,7 @@ kramar-studio-marketplace/
 ## Roadmap
 
 - **v0.1 — `product` scaffolded.** Skeleton commands, two skills, hooks for prerequisite enforcement, templates. Content depth filled iteratively.
-- **v0.2 — `product` content fill.** Each command fully spec'd, real templates with examples, integration patterns with `archforge`.
+- **v0.2 — `product` content fill.** Each command fully spec'd, real templates with examples, integration patterns with `architect`.
 - **v0.3 — `ops` plugin.** Same shape, role-specific cycle.
 - **v0.4 — `security` plugin.** Same shape, role-specific cycle.
 
