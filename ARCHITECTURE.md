@@ -114,7 +114,8 @@ graph TB
 
 | # | Date | Status | Decision |
 |---|---|---|---|
-| [0001](./docs/architecture/decisions/0001-absorb-archforge-into-kramar-studio-marketplace.md) | 2026-05-10 | Accepted (impl pending) | Поглотить плагин `archforge` в `kramar-studio-marketplace`; `archforge-marketplace` → redirect-stub |
+| [0002](./docs/architecture/decisions/0002-multi-level-versioning-contract.md) | 2026-05-10 | Accepted | Multi-level versioning contract: per-plugin semver + marketplace-as-schema-version + 8 правил (breaking-definition, символический 1.0.0, no formal dependencies, CHANGELOG audit-trail) |
+| [0001](./docs/architecture/decisions/0001-absorb-archforge-into-kramar-studio-marketplace.md) | 2026-05-10 | Accepted (implemented) | Поглотить плагин `archforge` в `kramar-studio-marketplace`; `archforge-marketplace` → redirect-stub |
 
 ADR-файлы лежат в [`docs/architecture/decisions/`](./docs/architecture/decisions/).
 
@@ -122,7 +123,7 @@ ADR-файлы лежат в [`docs/architecture/decisions/`](./docs/architectur
 
 ## 6. Open questions
 
-- **Двухуровневое версионирование.** `marketplace.json` несёт `version: 0.1.0`, и `plugins/product/plugin.json` тоже несёт `version: 0.1.0`. Какова контрактная связь? Должны ли они двигаться синхронно, и если да — как это форсируется без CI? Если нет — какой инкремент чего что означает для пользователя?
+- ~~**Двухуровневое версионирование.**~~ **Закрыт через [ADR-0002](./docs/architecture/decisions/0002-multi-level-versioning-contract.md):** per-plugin independent semver + `marketplace.json.version` как schema/curation version + 8 правил (breaking-definition, символический 1.0.0, no formal dependencies, CHANGELOG audit-trail). После ADR-0001 marketplace остаётся `0.1.0` (структура manifest не изменилась).
 - **Когда выделять новую skill.** Конвенция: ровно две skill'ы на плагин (`<role>-conventions`, `<role>-cycle`). Исключение допускается «когда возникает явно отдельное тело знания» (как `c4-diagrams`, `adr-writing` в `architect` — раньше `archforge`). Где порог? Сегодня размытый — нужен либо ADR с критериями, либо явный отказ от этого исключения.
 - **Стратегия миграций артефактов.** `/product:upgrade` обещает запустить миграции из `plugins/product/migrations/NNNN-from-X.Y.Z-to-A.B.C.md`. Но: формат миграционного файла не зафиксирован, нет процедуры тестирования миграции до релиза, нет ответа на вопрос «миграция повредила артефакты в чужом проекте — как откатить». В v0.1 миграций нет — пока только tactical, но это станет blocking при первом breaking-change апгрейде.
 - ~~**Cross-marketplace dependency на `archforge`.**~~ **Закрыт через [ADR-0001](./docs/architecture/decisions/0001-absorb-archforge-into-kramar-studio-marketplace.md):** вопрос dissolve через поглощение `archforge` в этот marketplace. Cross-link `links_to: [ADR-NNNN]` теперь intra-marketplace, работает по файловой конвенции, без install- или semver-coupling.

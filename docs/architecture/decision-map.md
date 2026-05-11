@@ -1,7 +1,7 @@
 # Decision Map
 
 > Living document. Обновляется всякий раз, когда цикл закрывается ADR'ом или появляется новый архитектурный вопрос.
-> **Last updated:** 2026-05-10 (после ADR-0001)
+> **Last updated:** 2026-05-10 (после ADR-0001 + ADR-0002)
 
 ## Инвентарь источников
 
@@ -25,11 +25,11 @@
 - _Source:_ ARCHITECTURE.md §6 Q4 (закрыт)
 
 ### A2. Multi-level versioning contract _(reframed после ADR-0001)_
-- _Forces:_ `marketplace.json` несёт `version`, и **каждый** из плагинов suite (`product`, `architect`, далее `ops`, `security`) несёт свой `version` в `plugin.json`. После ADR-0001 это уже не «двухуровневое» (marketplace + один плагин), а **N-уровневое** (umbrella + N независимых плагинов в одном репо). Двигаются ли версии плагинов синхронно (umbrella-bump = coordinated release всей suite) или независимо (каждый плагин — свой semver, marketplace.json — каталог)? Что в этих числах кодируется (breaking change артефактов? новые команды? bugfix скриптов)? Что инкремент чего означает для пользователя при `/<role>:upgrade`? Как координировать breaking change в мета-форме (которая по STRATEGY §2 единая для всей suite)?
-- _Status:_ open. **Срочность повышена** после ADR-0001 — суть вопроса расширилась.
-- _Blocks:_ B1 (миграции — это дельты между версиями; формат миграции не определить, пока не зафиксирована семантика версии)
+- _Forces:_ ~~`marketplace.json` несёт `version`, и каждый из плагинов suite несёт свой `version` в `plugin.json`. Двигаются ли версии плагинов синхронно или независимо? Что считать breaking change?~~
+- _Status:_ **decided → [ADR-0002](./decisions/0002-multi-level-versioning-contract.md)** (2026-05-10). Решение: per-plugin independent semver + `marketplace.json.version` как schema/curation version + 8 правил (включая breaking definition по VS Code-pattern, символический 1.0.0 как one-time scaffolded → active exception, no formal `dependencies` field, CHANGELOG как обязательный audit-trail). Roast trail (5 ролей) + ~30 findings; 11 интегрированы в ADR.
+- _Blocks (release):_ ~~B1, B2~~ — больше не блокирует (см. ниже).
 - _Blocked by:_ —
-- _Source:_ ARCHITECTURE.md §6 Q1
+- _Source:_ ARCHITECTURE.md §6 Q1 (закрыт)
 
 ---
 
@@ -37,18 +37,18 @@
 
 Технические контракты, которые наполняют worldview из Group A конкретикой.
 
-### B1. Migration format and procedure
-- _Forces:_ `/<role>:upgrade` обещает запустить миграции из `plugins/<role>/migrations/NNNN-from-X.Y.Z-to-A.B.C.md`. Не зафиксированы: формат файла (что внутри — markdown-инструкция Claude / bash / mix?), идемпотентность, тестирование до релиза, dry-run, процедура отката, поведение при многоверсионном прыжке. В v0.1 миграций нет — tactical, но станет blocking при первом breaking-change апгрейде.
-- _Status:_ open
-- _Blocks:_ — (но напрямую нужен для треков A и B из STRATEGY: без миграций контент-fill `product` и добавление `ops`/`security` рискует ломать чужие проекты)
-- _Blocked by:_ A2 (миграция — между версиями; нужно понимать, между чем мигрируем)
+### B1. Migration format and procedure _(unblocked after ADR-0002)_
+- _Forces:_ `/<role>:upgrade` обещает запустить миграции из `plugins/<role>/migrations/NNNN-from-X.Y.Z-to-A.B.C.md`. Не зафиксированы: формат файла (что внутри — markdown-инструкция Claude / bash / mix?), идемпотентность, тестирование до релиза, dry-run, процедура отката, поведение при многоверсионном прыжке. ADR-0002 правило 3 ввело atomicity-требование (маркер обновляется атомарно с миграцией; partial-failure → маркер на pre-upgrade); B1 цикл должен это операционализировать. Из roast ADR-0002 (compliance-officer C-3): для frontmatter-mutating миграций обязателен backup перед mutation. Из roast (devil-advocate A-5): existing `.archforge-version` маркеры → `.architect-version` migration path в `architect/commands/upgrade.md`.
+- _Status:_ open. **Unblocked после ADR-0002** — семантика версий зафиксирована, можно описать формат миграционного файла.
+- _Blocks:_ — (напрямую нужен для треков A и B из STRATEGY: без миграций контент-fill `product` и добавление `ops`/`security` рискует ломать чужие проекты)
+- _Blocked by:_ ~~A2~~ (закрыт)
 - _Source:_ ARCHITECTURE.md §6 Q3
 
-### B2. Quality control without CI _(упрощено после ADR-0001)_
-- _Forces:_ markdown + bash, тестов нет, CI нет. Как ловить регрессии: «команда стала генерировать сломанный frontmatter», «hook падает с ошибкой парсинга на новой версии Claude Code», «миграция повредила артефакты в чужом проекте». Нужна процедура (manual checklist? snapshot-артефакты с golden-output? smoke-проект как тестовая площадка?). Без неё каждый новый плагин увеличивает невидимую surface area.
-- _Status:_ open
-- _Blocks:_ — (но косвенно ограничивает скорость треков B и C из STRATEGY: без QC каждый scaffold нового плагина — рулетка)
-- _Blocked by:_ ~~A1~~ (закрыт; cross-link теперь intra-marketplace, проверяется проще), A2 (QC должен ловить migration regressions; без зафиксированного формата версионирования непонятно, что снапшотить)
+### B2. Quality control without CI _(упрощено после ADR-0001 + частично unblocked после ADR-0002)_
+- _Forces:_ markdown + bash, тестов нет, CI нет. Как ловить регрессии: «команда стала генерировать сломанный frontmatter», «hook падает с ошибкой парсинга на новой версии Claude Code», «миграция повредила артефакты в чужом проекте». ADR-0002 описал scope того, что QC должен ловить: (a) version-marker drift (`.<plugin>-version` ≠ `plugin.json.version` после upgrade); (b) three-place sync drift (правило 7 binding precedence); (c) frontmatter-violation (правило 4); (d) breaking-without-bump (правило 4 violation). Из roast ADR-0002 (pragmatist P-7): минимальный self-defense — bash-скрипт `check-versions.sh`, который грепает три места и diff'ит. Не CI, локальный smoke-test.
+- _Status:_ open. **Частично unblocked после ADR-0002** — scope того, что проверять, теперь формализован. Нужна процедура.
+- _Blocks:_ — (косвенно ограничивает скорость треков B и C из STRATEGY)
+- _Blocked by:_ ~~A1~~ (закрыт), ~~A2~~ (закрыт), теперь только нужны ресурсы на дизайн procedure
 - _Source:_ ARCHITECTURE.md §6 Q5
 
 ### B3. Hook execution environment contract
@@ -87,9 +87,9 @@
 | После A2 + B1 | **B2** Quality control without CI | После ADR-0001 — упростился: cross-link стал intra-marketplace. QC проверяет migration regressions (B1) и frontmatter validity. Брать после, не до. |
 | После всего | **C1** Skill-count threshold | Меньшая срочность; решать ровно перед `/ops:init`. После ADR-0001 — единый порог для всей suite (плагины в одном marketplace должны быть консистентны). |
 
-**Если можно работать только в один поток:** ADR-0001 implementation → **A2 → B3 → D4 → B1 → B2 → C1**.
+**Если можно работать только в один поток:** ~~ADR-0001 implementation → A2~~ ✅ done → **B3 → D4 → B1 → B2 → C1**.
 
-**Если можно параллелить:** ADR-0001 implementation сначала; затем A2, B3, D4 — параллельно; потом B1 (после A2); потом B2 (после A2+B1); потом C1.
+**Если можно параллелить:** ~~ADR-0001 implementation, A2~~ ✅ done; затем B3, D4 — параллельно; потом B1 и B2 (можно параллельно — оба unblocked); потом C1.
 
 ---
 
