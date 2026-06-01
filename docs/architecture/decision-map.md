@@ -39,7 +39,7 @@
 
 ### B1. Migration format and procedure _(unblocked after ADR-0002)_
 - _Forces:_ `/<role>:upgrade` обещает запустить миграции из `plugins/<role>/migrations/NNNN-from-X.Y.Z-to-A.B.C.md`. Не зафиксированы: формат файла (что внутри — markdown-инструкция Claude / bash / mix?), идемпотентность, тестирование до релиза, dry-run, процедура отката, поведение при многоверсионном прыжке. ADR-0002 правило 3 ввело atomicity-требование (маркер обновляется атомарно с миграцией; partial-failure → маркер на pre-upgrade); B1 цикл должен это операционализировать. Из roast ADR-0002 (compliance-officer C-3): для frontmatter-mutating миграций обязателен backup перед mutation. Из roast (devil-advocate A-5): existing `.archforge-version` маркеры → `.architect-version` migration path в `architect/commands/upgrade.md`.
-- _Status:_ open. **Unblocked после ADR-0002** — семантика версий зафиксирована, можно описать формат миграционного файла.
+- _Status:_ **decided → [ADR-0003](./decisions/0003-migration-format-and-procedure.md)** (2026-06-01). Решение: file-based Model B, формат `_TEMPLATE.md`, per-step atomicity, backup при `mutates_frontmatter: true`, marker-location per-plugin. `architect` реконсилирован (инлайн 0.2→0.3 → файл; `.archforge-version` recovery path добавлен), `product` → символический 1.0.0.
 - _Blocks:_ — (напрямую нужен для треков A и B из STRATEGY: без миграций контент-fill `product` и добавление `ops`/`security` рискует ломать чужие проекты)
 - _Blocked by:_ ~~A2~~ (закрыт)
 - _Source:_ ARCHITECTURE.md §6 Q3
@@ -83,13 +83,13 @@
 | **Next** | **A2** Multi-level versioning contract _(reframed)_ | После ADR-0001 объём вырос: marketplace + `product` + `architect` + (будущие) `ops`/`security`. Самое необратимое решение оставшейся группы A: как только семантика версий объявлена и пользователи начали upgrade'иться, изменить контракт = breaking change для `.<role>-version` маркеров всех плагинов. Высокая info-value: unblocks B1 и B2. |
 | **Next (parallel-able)** | **B3** Hook execution environment contract | Не блокирует A2 и не блокируется им. Решить **до** scaffold нового роль-плагина (трек B из STRATEGY) — иначе `ops` / `security` повторят ad-hoc bash-pattern, и контракт зафиксируется по факту. С учётом ADR-0001 — единый контракт для **всех** плагинов suite, а не только product. |
 | **Next (parallel-able)** | **D4** Cross-role workflow внутри suite _(пересдвинутый из deferred)_ | После ADR-0001 implementation `architect` и `product` начинают жить рядом. Вопрос «как security review линкуется к ops runbook без посредничества ADR» становится конкретным. Брать ДО scaffold ops/security — иначе они не будут уметь cross-link друг с другом. |
-| После A2 | **B1** Migration format and procedure | Hard-зависим от A2. Формат миграции описывается тривиально, когда семантика версий зафиксирована. До этого — спекуляция. |
+| ~~После A2~~ ✅ | ~~**B1** Migration format and procedure~~ → [ADR-0003](./decisions/0003-migration-format-and-procedure.md) | Done 2026-06-01. File-based runner + первая миграция product + реконсиляция architect. |
 | После A2 + B1 | **B2** Quality control without CI | После ADR-0001 — упростился: cross-link стал intra-marketplace. QC проверяет migration regressions (B1) и frontmatter validity. Брать после, не до. |
 | После всего | **C1** Skill-count threshold | Меньшая срочность; решать ровно перед `/ops:init`. После ADR-0001 — единый порог для всей suite (плагины в одном marketplace должны быть консистентны). |
 
-**Если можно работать только в один поток:** ~~ADR-0001 implementation → A2~~ ✅ done → **B3 → D4 → B1 → B2 → C1**.
+**Если можно работать только в один поток:** ~~ADR-0001 implementation → A2~~ ✅ done → **B3 → D4 → ~~B1~~ ✅ → B2 → C1**.
 
-**Если можно параллелить:** ~~ADR-0001 implementation, A2~~ ✅ done; затем B3, D4 — параллельно; потом B1 и B2 (можно параллельно — оба unblocked); потом C1.
+**Если можно параллелить:** ~~ADR-0001 implementation, A2~~ ✅ done; затем B3, D4 — параллельно; ~~B1~~ ✅ done; B2 (unblocked); потом C1.
 
 ---
 

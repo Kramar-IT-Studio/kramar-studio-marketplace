@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-plugin.json",
   "name": "architect",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Architecture toolkit for Claude Code. A staff/principal-grade architect on tap, organized as a Discover → Design → Decide → Document → Review cycle. Includes a router skill (role), narrow specialist skills (C4, ADR, system design, code review, research, frontend, backend, AI agents), slash commands, sub-agents, and a project-level ARCHITECTURE.md template. Companion to the `product` plugin in the Kramar Studio Suite.",
   "keywords": [
     "architecture",

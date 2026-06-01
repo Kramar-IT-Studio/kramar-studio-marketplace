@@ -22,8 +22,8 @@ A Claude Code [plugin marketplace](https://docs.claude.com/en/docs/claude-code/p
 
 | Plugin | Status | Version | Purpose |
 |---|---|---|---|
-| **`architect`** | 🟢 active | `1.0.0` | Architecture role — Discover → Design → Decide → Document → Review cycle. Skills for C4, ADR, system design, frontend/backend/AI-agents architecture, code review, research. Router skill `architect:role`. |
-| **`product`** | 🟡 scaffolded | `0.1.0` | Market-scan (quarterly anchor) + per-feature cycle Discover → Define → Spec → Validate, plus `prioritize` over a backlog. Artifacts: HYP/PRD/SPEC/VAL/SCAN, cross-linked to ADRs from `architect`. |
+| **`architect`** | 🟢 active | `1.1.0` | Architecture role — Discover → Design → Decide → Document → Review cycle. Skills for C4, ADR, system design, frontend/backend/AI-agents architecture, code review, research. Router skill `architect:role`. |
+| **`product`** | 🟢 active | `1.0.0` | Market-scan (quarterly anchor) + per-feature cycle Discover → Define → Spec → Validate, plus `prioritize` over a backlog. Artifacts: HYP/PRD/SPEC/VAL/SCAN, cross-linked to ADRs from `architect`. |
 | **`ops`** | ⚪ planned | `0.3` | Operations role — runbook authoring, on-call posture, incident retrospectives. |
 | **`security`** | ⚪ planned | `0.4` | Security role — threat modeling, security review, dependency posture. |
 
@@ -200,6 +200,7 @@ Per [ADR-0002](./docs/architecture/decisions/0002-multi-level-versioning-contrac
 - **Symbolic `1.0.0`** allowed once per plugin at the `scaffolded → active` transition.
 - **`dependencies` field** in `plugin.json` is not used; cross-plugin links go through `links_to: [ADR-NNNN]` file conventions.
 - **CHANGELOG** is mandatory for every plugin and every bump.
+- **Migrations** are separate files `plugins/<role>/migrations/NNNN-from-X.Y.Z-to-A.B.C.md`, run sequentially by `/<role>:upgrade`. Each file carries `migration / from / to / mutates_frontmatter / scope` front-matter and fixed body sections (`Summary`, `Preconditions`, `Transform`, `Backup`, `Verification`, `Rollback note`, `Never`). The runner writes the `.<plugin>-version` marker after each successful step (per-step atomicity); a mid-run failure leaves the marker at the last completed step. A backup is taken before any front-matter mutation. The marker's location is plugin-specific and declared in the plugin's `<role>-conventions` skill (`product`: repo-root `.product-version`; `architect`: `docs/architecture/.architect-version`). See [ADR-0003](./docs/architecture/decisions/0003-migration-format-and-procedure.md).
 
 ### 8. Two skills per plugin (minimum)
 
@@ -262,7 +263,8 @@ kramar-studio-marketplace/
 ## Roadmap
 
 - ✅ **v0.1** — `product` scaffolded; `archforge` absorbed and renamed to `architect`; multi-level versioning contract (ADR-0002)
-- 🚧 **v0.2** — `product` content fill (real templates with examples, integration patterns with `architect`); migration format (B1)
+- ✅ **product 1.0** — migration mechanism (B1) + symbolic 1.0.0 (scaffolded → active); see ADR-0003
+- 🚧 **next** — `product` content fill for non-cycle commands (`market-scan`, `prioritize`); `ops` scaffold (v0.3)
 - 📅 **v0.3** — `ops` plugin (runbooks, on-call posture, incident retrospectives)
 - 📅 **v0.4** — `security` plugin (threat modeling, security review, dependency posture)
 
