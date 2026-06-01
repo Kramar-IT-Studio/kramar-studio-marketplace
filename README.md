@@ -23,7 +23,7 @@ A Claude Code [plugin marketplace](https://docs.claude.com/en/docs/claude-code/p
 | Plugin | Status | Version | Purpose |
 |---|---|---|---|
 | **`architect`** | 🟢 active | `1.0.0` | Architecture role — Discover → Design → Decide → Document → Review cycle. Skills for C4, ADR, system design, frontend/backend/AI-agents architecture, code review, research. Router skill `architect:role`. |
-| **`product`** | 🟡 scaffolded | `0.1.0` | Market-scan (quarterly anchor) + per-feature cycle Discover → Define → Spec → Validate, plus `prioritize` over a backlog. Artifacts: HYP/PRD/SPEC/VAL/SCAN, cross-linked to ADRs from `architect`. |
+| **`product`** | 🟢 active | `1.0.0` | Market-scan (quarterly anchor) + per-feature cycle Discover → Define → Spec → Validate, plus `prioritize` over a backlog. Artifacts: HYP/PRD/SPEC/VAL/SCAN, cross-linked to ADRs from `architect`. |
 | **`ops`** | ⚪ planned | `0.3` | Operations role — runbook authoring, on-call posture, incident retrospectives. |
 | **`security`** | ⚪ planned | `0.4` | Security role — threat modeling, security review, dependency posture. |
 
@@ -263,7 +263,8 @@ kramar-studio-marketplace/
 ## Roadmap
 
 - ✅ **v0.1** — `product` scaffolded; `archforge` absorbed and renamed to `architect`; multi-level versioning contract (ADR-0002)
-- 🚧 **v0.2** — `product` content fill (real templates with examples, integration patterns with `architect`); migration format (B1)
+- ✅ **product 1.0** — migration mechanism (B1) + symbolic 1.0.0 (scaffolded → active); see ADR-0003
+- 🚧 **next** — `product` content fill for non-cycle commands (`market-scan`, `prioritize`); `ops` scaffold (v0.3)
 - 📅 **v0.3** — `ops` plugin (runbooks, on-call posture, incident retrospectives)
 - 📅 **v0.4** — `security` plugin (threat modeling, security review, dependency posture)
 

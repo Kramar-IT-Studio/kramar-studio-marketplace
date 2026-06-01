@@ -29,6 +29,12 @@ docs/product/
 └── .last-market-scan         ← marker file
 ```
 
+**Version marker.** `.product-version` is a single-line SemVer string at the **repository
+root** (not under `docs/product/`). It is written by `/product:init` and by each successful
+step of `/product:upgrade`, and mirrors `plugin.json.version` at that moment (ADR-0002 rule
+3). Migrations live in the plugin under `migrations/NNNN-from-X.Y.Z-to-A.B.C.md`; the format
+is in README §7 and ADR-0003.
+
 `PRODUCT.md` lives at the **repository root**, alongside `ARCHITECTURE.md` (if `architect` is in use) and `CLAUDE.md`. Same level — these are project memory documents, not artifacts.
 
 ## Artifact identity: the front-matter contract
