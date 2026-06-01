@@ -2,6 +2,20 @@
 
 All notable changes to the `architect` plugin (formerly `archforge`) are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] — 2026-06-01 — File-based migrations (suite alignment)
+
+### Changed
+
+- `commands/upgrade.md` reworked into a thin migration runner. The 0.2 → 0.3 migration that
+  was inline is now `migrations/0001-from-0.2.0-to-0.3.0.md`. External upgrade behavior is
+  unchanged; this aligns `architect` with the suite migration format (ADR-0002 / ADR-0003).
+
+### Added
+
+- `migrations/` directory with `_TEMPLATE.md` and `0001-from-0.2.0-to-0.3.0.md`.
+- Recovery path: `/architect:upgrade` detects a legacy `.archforge-version` marker and, on
+  confirmation, renames it to `.architect-version` (ADR-0002 rule 3).
+
 ## [1.0.0] — 2026-05-10 — Absorbed into `kramar-studio-marketplace`; renamed `archforge` → `architect`
 
 The plugin moved from `archforge-marketplace` (its own standalone marketplace) into `kramar-studio-marketplace` as a peer of `product`, and was renamed `archforge` → `architect` for consistency with the role-named suite (`product`, `ops`, `security`). The router skill was also renamed `architect:architect` → `architect:role` to avoid the collision and to establish a `<plugin>:role` pattern for future suite plugins. Strategic context and rationale: see [ADR-0001](https://github.com/Kramar-IT-Studio/kramar-studio-marketplace/blob/main/docs/architecture/decisions/0001-absorb-archforge-into-kramar-studio-marketplace.md) in the new marketplace.

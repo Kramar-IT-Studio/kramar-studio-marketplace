@@ -22,7 +22,7 @@ A Claude Code [plugin marketplace](https://docs.claude.com/en/docs/claude-code/p
 
 | Plugin | Status | Version | Purpose |
 |---|---|---|---|
-| **`architect`** | 🟢 active | `1.0.0` | Architecture role — Discover → Design → Decide → Document → Review cycle. Skills for C4, ADR, system design, frontend/backend/AI-agents architecture, code review, research. Router skill `architect:role`. |
+| **`architect`** | 🟢 active | `1.1.0` | Architecture role — Discover → Design → Decide → Document → Review cycle. Skills for C4, ADR, system design, frontend/backend/AI-agents architecture, code review, research. Router skill `architect:role`. |
 | **`product`** | 🟢 active | `1.0.0` | Market-scan (quarterly anchor) + per-feature cycle Discover → Define → Spec → Validate, plus `prioritize` over a backlog. Artifacts: HYP/PRD/SPEC/VAL/SCAN, cross-linked to ADRs from `architect`. |
 | **`ops`** | ⚪ planned | `0.3` | Operations role — runbook authoring, on-call posture, incident retrospectives. |
 | **`security`** | ⚪ planned | `0.4` | Security role — threat modeling, security review, dependency posture. |
