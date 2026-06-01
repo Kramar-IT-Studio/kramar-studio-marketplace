@@ -200,6 +200,7 @@ Per [ADR-0002](./docs/architecture/decisions/0002-multi-level-versioning-contrac
 - **Symbolic `1.0.0`** allowed once per plugin at the `scaffolded → active` transition.
 - **`dependencies` field** in `plugin.json` is not used; cross-plugin links go through `links_to: [ADR-NNNN]` file conventions.
 - **CHANGELOG** is mandatory for every plugin and every bump.
+- **Migrations** are separate files `plugins/<role>/migrations/NNNN-from-X.Y.Z-to-A.B.C.md`, run sequentially by `/<role>:upgrade`. Each file carries `migration / from / to / mutates_frontmatter / scope` front-matter and fixed body sections (`Summary`, `Preconditions`, `Transform`, `Backup`, `Verification`, `Rollback note`, `Never`). The runner writes the `.<plugin>-version` marker after each successful step (per-step atomicity); a mid-run failure leaves the marker at the last completed step. A backup is taken before any front-matter mutation. The marker's location is plugin-specific and declared in the plugin's `<role>-conventions` skill (`product`: repo-root `.product-version`; `architect`: `docs/architecture/.architect-version`). See [ADR-0003](./docs/architecture/decisions/0003-migration-format-and-procedure.md).
 
 ### 8. Two skills per plugin (minimum)
 

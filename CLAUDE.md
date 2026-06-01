@@ -43,7 +43,7 @@ For local development of this marketplace, install it from the absolute path:
 /plugin install product@kramar-studio-marketplace
 ```
 
-To bump a plugin version: edit `plugins/<role>/.claude-plugin/plugin.json` AND `.claude-plugin/marketplace.json` if the marketplace-level metadata changes. Add a migration file under `plugins/<role>/migrations/NNNN-from-X.Y.Z-to-A.B.C.md` whenever artifact structure changes (the `upgrade` command runs them sequentially).
+To bump a plugin version: edit `plugins/<role>/.claude-plugin/plugin.json` AND `.claude-plugin/marketplace.json` if the marketplace-level metadata changes. Add a migration file under `plugins/<role>/migrations/NNNN-from-X.Y.Z-to-A.B.C.md` whenever a version step needs project-side changes — front-matter (`migration / from / to / mutates_frontmatter / scope`) plus fixed sections (`Summary` / `Preconditions` / `Transform` / `Backup` / `Verification` / `Rollback note` / `Never`); copy `migrations/_TEMPLATE.md`. `/<role>:upgrade` runs them in order and writes the `.<role>-version` marker per successful step. See ADR-0003 and README §7.
 
 ## Marketplace-wide conventions (binding)
 
