@@ -12,7 +12,7 @@ plugin. This command updates **the project** (artifacts under `docs/architecture
 
 Migrations are separate files under `${CLAUDE_PLUGIN_ROOT}/migrations/`, named
 `NNNN-from-X.Y.Z-to-A.B.C.md`. This command is the runner. The migration file format is
-documented in README §7 and `adr-writing` / `role`; see ADR-0003 for the rationale.
+documented in README §7 and `migrations/_TEMPLATE.md`; see ADR-0003 for the rationale.
 
 ## Steps
 
@@ -25,11 +25,13 @@ abort: "Couldn't determine the installed plugin version. Is the plugin installed
 
 Read `docs/architecture/.architect-version` (single-line SemVer string).
 
-- **Missing** → check for legacy markers in this order: `.archforge-version` (pre-rename,
-  ADR-0001), then `.krait-arch-version` (plugin versions 0.4.0-rc1/rc2 when named
-  `krait_arch`). If a legacy marker is found, ask the user to confirm migrating it: read its
-  contents, write `docs/architecture/.architect-version` with the same string, and delete
-  the legacy marker. Tell the user which legacy marker was detected and renamed.
+- **Missing or not a valid SemVer string** → check for legacy markers in this order:
+  `.archforge-version` (pre-rename, ADR-0001), then `.krait-arch-version` (plugin versions
+  0.4.0-rc1/rc2 when named `krait_arch`). If a legacy marker is found, ask the user to
+  confirm migrating it: read its contents, write `docs/architecture/.architect-version` with
+  the same string, and delete the legacy marker. Tell the user which legacy marker was
+  detected and renamed. If the marker exists but is unreadable/unparseable and there is no
+  legacy marker, treat as `0.0.0` (see next bullet).
 - **No marker and no legacy marker, but `docs/architecture/` exists** → treat as `0.0.0`
   (all migrations apply); confirm with the user first, since for a long-lived project this
   may be a non-trivial set of changes.
@@ -38,12 +40,15 @@ Read `docs/architecture/.architect-version` (single-line SemVer string).
 
 ### 3. Determine the migration path
 
-List `${CLAUDE_PLUGIN_ROOT}/migrations/*.md`, ignore `_TEMPLATE.md`, parse each file's
-`from` / `to`. Select migrations with `from ≥ marker` and `to ≤ installed`, ordered by
-`migration` (NNNN).
+- `installed == marker` → no-op: "Already at architect `<version>`. Nothing to migrate." Stop.
+- `installed < marker` (downgrade) → refuse: the marker is ahead of the installed plugin. Stop.
 
-- `installed == marker` → no-op: "Already at architect `<version>`. Nothing to migrate."
-- `installed < marker` (downgrade) → refuse: the marker is ahead of the installed plugin.
+Otherwise (`installed > marker`): list `${CLAUDE_PLUGIN_ROOT}/migrations/*.md`, ignore
+`_TEMPLATE.md`, parse each file's `from` / `to`. Select migrations with `to > marker` **and**
+`to ≤ installed`, ordered ascending by `to` (equivalently by `migration` NNNN). Migrations
+are **sparse**: most version steps have no migration file, and an absent migration for a step
+is a legitimate no-op — not an error. Compare versions by SemVer precedence (a pre-release
+like `0.4.0-rc1` sorts before `0.4.0`).
 
 ### 4. Refuse on a dirty working tree
 
@@ -57,13 +62,14 @@ installed does. Informational — no files touched yet.
 
 ### 6. Confirm before mutating
 
-Summarize what each migration will change. **Mandatory when ≥2 migrations** will run.
-Preserve user customizations: if a migration wants to refresh a section the user edited,
-diff it and ask before overwriting. Wait for confirmation.
+Summarize what each migration will change, then **wait for confirmation before mutating any
+files** (a declared no-op migration may proceed without waiting). Preserve user
+customizations: if a migration wants to refresh a section the user edited, diff it and ask
+before overwriting.
 
 ### 7. Run migrations in order
 
-For each selected migration, in `NNNN` order:
+For each selected migration, in ascending `to` order:
 
 1. Check its `## Preconditions`. If unmet, stop and report.
 2. If front-matter `mutates_frontmatter: true`, copy every file the `## Transform` will
@@ -75,6 +81,12 @@ For each selected migration, in `NNNN` order:
 5. **Write `docs/architecture/.architect-version` = this migration's `to`** (per-step
    atomicity); one-line file, trailing newline.
 6. Log to chat: "Applied <from> → <to>."
+
+After the last selected migration — or immediately, if the selected set was empty but
+`installed > marker` — **write `docs/architecture/.architect-version` = `installed`** to
+reconcile the tail of no-migration version steps (e.g. 0.3.0 → 1.1.0, which has no migration
+file). After a successful run the marker always equals the installed version (ADR-0002 rule
+3).
 
 ### 8. Report
 
